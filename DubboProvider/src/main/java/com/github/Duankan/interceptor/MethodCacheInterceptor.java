@@ -2,11 +2,13 @@ package com.github.Duankan.interceptor;
 import com.github.Duankan.utils.RedisUtil;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 public class MethodCacheInterceptor implements MethodInterceptor {
-    private RedisUtil redisUtil;
+    @Autowired
+    RedisUtil redisUtil;
     private List<String> targetNamesList; // 禁用缓存的类名列表
     private List<String> methodNamesList; // 禁用缓存的方法列表
     private String defaultCacheExpireTime; // 缓存默认的过期时间

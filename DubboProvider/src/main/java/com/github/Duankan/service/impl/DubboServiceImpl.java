@@ -12,8 +12,6 @@ import javax.annotation.Resource;
 public class DubboServiceImpl   implements IDubboService {
     @Resource
     UserPoMapper userPoMapper;
-//    ClassPathXmlApplicationContext context=BaseService.getContext();
-//    RedisUtil redisUtil = (RedisUtil) context.getBean("redisUtil");
     @Override
     public String say(String name) {
         System.out.println("hello,this is dubbo "+name);

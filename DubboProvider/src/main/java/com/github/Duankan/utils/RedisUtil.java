@@ -1,5 +1,6 @@
 package com.github.Duankan.utils;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 
@@ -11,7 +12,8 @@ import java.util.concurrent.TimeUnit;
  * Redis工具类
  */
 public class RedisUtil {
-    private RedisTemplate<Serializable, Object> redisTemplate;
+    @Autowired
+    RedisTemplate<Serializable, Object> redisTemplate;
 
     /**
      * 批量删除对应的value
