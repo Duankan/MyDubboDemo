@@ -9,16 +9,18 @@
     <!-- 自动扫描 -->
     <context:component-scan base-package="com.github.Duankan.dao" />
     <!-- 引入配置文件 -->
-    <bean id="propertyConfigurer"
-          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="location" value="classpath:jdbc.properties" />
-    </bean>
+    <!--<bean id="propertyConfigurer"-->
+          <!--class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">-->
+        <!--<property name="location" value="classpath:jdbc.properties" />-->
+    <!--</bean>-->
+    <!--<context:property-placeholder location="classpath:jdbc.properties,classpath:redis.properties" />-->
+
     <!-- 配置数据源 -->
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="${jdbc.driver}" />
-        <property name="url" value="${jdbc.url}" />
-        <property name="username" value="${jdbc.username}" />
-        <property name="password" value="${jdbc.password}" />
+        <property name="driverClassName" value="com.mysql.jdbc.Driver" />
+        <property name="url" value="jdbc:mysql://127.0.0.1:3306/huafeng" />
+        <property name="username" value="root"/>
+        <property name="password" value="root"/>
     </bean>
 
     <!-- spring和MyBatis完美整合，不需要mybatis的配置映射文件 -->
@@ -40,5 +42,7 @@
           class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource" />
     </bean>
+    <!-- 开始声明式事务（事物注解） -->
+    <tx:annotation-driven transaction-manager="transactionManager" />
 
 </beans>

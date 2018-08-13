@@ -1,13 +1,12 @@
 package com.github.Duankan;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.IOException;
 
 public class DubboDemo {
-    private static final Log log = LogFactory.getLog(DubboDemo.class);
+//    private static final Log log = LogFactory.getLog(DubboDemo.class);
     public static void main(String[] args) throws IOException {
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("classpath:provider.xml");
         context.start();

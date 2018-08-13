@@ -12,7 +12,7 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="DubboConsumer" target="1.7" />
-      <module name="DubboProvider" target="1.7" />
+      <module name="DubboProvider" target="1.8" />
       <module name="MyDubboDemo" target="1.5" />
     </bytecodeTargetLevel>
   </component>
