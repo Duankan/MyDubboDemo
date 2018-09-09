@@ -14,4 +14,13 @@
     <bean id="Mydemo" class="com.github.Duankan.service.impl.DubboServiceImpl"/>
     <!-- 声明需要暴露的服务接口 -->
     <dubbo:service interface="com.github.Duankan.service.IDubboService" ref="Mydemo"/>
+    <!--shiro的userService-->
+    <bean id="IUsers" class="com.github.Duankan.service.impl.UsersServiceImpl"></bean>
+    <dubbo:service interface="com.github.Duankan.service.IUsers" ref="IUsers"></dubbo:service>
+    <!--shiro的roleService-->
+    <bean id="IRole" class="com.github.Duankan.service.impl.RoleServiceImpl"></bean>
+    <dubbo:service interface="com.github.Duankan.service.IRole" ref="IRole"></dubbo:service>
+    <!--shiro的permissionService-->
+    <bean id="IPermission" class="com.github.Duankan.service.impl.PermissionServiceImpl"></bean>
+    <dubbo:service interface="com.github.Duankan.service.IPermission" ref="IPermission"></dubbo:service>
 </beans>

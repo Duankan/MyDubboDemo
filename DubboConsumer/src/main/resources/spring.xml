@@ -10,4 +10,5 @@
     <!-- 自动扫描指定目录，将控制器加载到bean -->
     <context:component-scan base-package="com.github.Duankan.*"></context:component-scan>
     <import resource="dubbo-demo-consumer.xml"></import>
+    <import resource="shiro.xml"></import>
 </beans>

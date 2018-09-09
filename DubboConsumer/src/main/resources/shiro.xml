@@ -1,0 +1,46 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+    <!-- shiroFilter Bean的id 必须和web.xml中配置的filter的name一直  -->
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <property name="securityManager" ref="securityManager" />
+        <!--loginUrl 没有登录的用户请求需要登录的页面时自动跳转到登录页面，不是必须的属性，不输入地址的话会自动寻找项目web项目的根目录下的”/login.jsp”页面。 -->
+        <property name="loginUrl" value="/login.jsp" />
+        <!--&lt;!&ndash;successUrl 登录成功默认跳转页面，不配置则跳转至”/”。如果登陆前点击的一个需要登录的页面，则在登录自动跳转到那个需要登录的页面。不跳转到此。&ndash;&gt;-->
+        <!--<property name="successUrl" value="/success.jsp" />-->
+        <!--&lt;!&ndash;unauthorizedUrl：没有权限默认跳转的页面。&ndash;&gt;-->
+        <!--<property name="unauthorizedUrl" value="/index.jsp" />-->
+        <!-- 这个就是权限路径过滤  会在下面单独列出来 -->
+        <property name="filterChainDefinitions">
+            <value>
+                <!--/static/**=anon  &lt;!&ndash;静态资源允许访问&ndash;&gt;-->
+                <!--/login.jsp=anon-->
+                /= anon
+                /dubboConsumer/login=anon    <!--登录不需要认证-->
+                <!--/logout = logout-->
+                <!--/role/** = roles[admin]-->
+                <!--/permission/** = perms[permssion:look]-->
+                /dubboConsumer/** = authc
+            </value>
+        </property>
+    </bean>
+    <!-- 配置securityManager -->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <!-- 单realm应用。如果有多个realm，使用‘realms’属性代替 -->
+        <property name="realm" ref="testRealm" />
+        <property name="cacheManager" ref="cacheManager" />  <!-- 缓存配置，集群环境慎用 -->
+    </bean>
+    <bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager" />
+    <!-- 一个简单的jdbcRealm -->
+    <bean id="testRealm" class="com.github.Duan.Consumer.shiro.TestRealm">
+    </bean>
+    <bean id="hashedCredentialsMatcher"
+          class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+        <property name="hashAlgorithmName" value="MD5" />
+        <!-- hashAlgorithmName必须的，没有默认值。可以有MD5或者SHA-1，如果对密码安全有更高要求可以用SHA-256或者更高。这里使用MD5 -->
+        <property name="storedCredentialsHexEncoded" value="true" />
+        <!-- storedCredentialsHexEncoded默认是true，此时用的是密码加密用的是Hex编码；false时用Base64编码 -->
+        <property name="hashIterations" value="1" />
+        <!-- hashIterations迭代次数，默认值是1。 -->
+    </bean>
+</beans>

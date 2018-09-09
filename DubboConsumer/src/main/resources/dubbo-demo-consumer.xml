@@ -15,5 +15,7 @@
     <!--<dubbo:consumer check="false" />-->
     <!-- 生成远程服务代理，可以与本地bean一样使用  check属性，启动时候是否检查 一般设置成false 启动时候不检查 -->
     <dubbo:reference id="Mydemo"  interface="com.github.Duankan.service.IDubboService" timeout="1200000"/>
-
+    <dubbo:reference id="IUsers"  interface="com.github.Duankan.service.IUsers" timeout="1200000"/>
+    <dubbo:reference id="IRole"  interface="com.github.Duankan.service.IRole" timeout="1200000"/>
+    <dubbo:reference id="IPermission"  interface="com.github.Duankan.service.IPermission" timeout="1200000"/>
 </beans>
