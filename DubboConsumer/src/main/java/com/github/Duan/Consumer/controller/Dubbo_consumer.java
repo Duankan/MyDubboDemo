@@ -1,5 +1,7 @@
 package com.github.Duan.Consumer.controller;
 
+import com.github.Duankan.base.ResponseEnum;
+import com.github.Duankan.base.ResponsePojo;
 import com.github.Duankan.po.UserPo;
 import com.github.Duankan.service.IDubboService;
 import com.github.Duankan.service.IPermission;
@@ -14,7 +16,9 @@ import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 
@@ -68,6 +72,24 @@ public class Dubbo_consumer {
         }
         catch (AuthenticationException e){
             throw e;
+        }
+    }
+    //前后端分离，rest风格
+    @RequestMapping("/rest_getUser")
+    @ResponseBody
+    public ResponsePojo<UserPo> getUserRest(){
+        ResponsePojo<UserPo> responsePojo=new ResponsePojo<>();
+        UserPo po=dubboService.queryById(9);
+        if (po!=null){
+            responsePojo.setCode(ResponseEnum.SUCCESS.getCode());
+            responsePojo.setMsg(ResponseEnum.SUCCESS.getDisplayName());
+            responsePojo.setObject(po);
+            return responsePojo;
+        }
+        else {
+            responsePojo.setCode(ResponseEnum.FAIL.getCode());
+            responsePojo.setMsg(ResponseEnum.FAIL.getDisplayName());
+            return responsePojo;
         }
     }
 }
