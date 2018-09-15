@@ -45,6 +45,11 @@ public class Dubbo_consumer {
         }
         return "consumer";
     }
+    //写一个重定向测试httpClient
+    @RequestMapping("/redirect")
+    public String redirect(){
+        return "redirect:/consumer";
+    }
     //shiro
     @RequiresRoles("admin1")
     @RequestMapping("/shiro")
@@ -64,6 +69,8 @@ public class Dubbo_consumer {
         UsernamePasswordToken token=new UsernamePasswordToken(username,password);
         try {
             subject.login(token);
+            //测试httpClient 302重定向
+//            return "redirect:/consumer";
             return "success";
         }
         catch (IncorrectCredentialsException e){
