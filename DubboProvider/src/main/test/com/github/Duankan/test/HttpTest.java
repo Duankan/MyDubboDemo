@@ -22,7 +22,6 @@ public class HttpTest {
     @Test
     public void getTest() throws Exception {
         HttpUtils httpUtils = new HttpUtils();
-//        httpUtils.doGet("https://blog.csdn.net/qq9808/article/details/78320816");
         Map<String, String> params = new HashMap<>();
         params.put("username", "java");
         params.put("password", "123");
