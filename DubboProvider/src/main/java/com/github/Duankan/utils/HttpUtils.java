@@ -7,6 +7,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
@@ -37,6 +38,8 @@ public class HttpUtils {
 //            DefaultHttpClient client = new DefaultHttpClient();
             //发送get请求
             HttpGet request = new HttpGet(url);
+//            //保存登录信息
+//            HttpClientContext localContext = new HttpClientContext();
             HttpResponse response = client.execute(request);
             if(cookieStore!=null){
                 client.setCookieStore(cookieStore);
@@ -62,16 +65,16 @@ public class HttpUtils {
             // 定义HttpClient
 //            DefaultHttpClient client = new DefaultHttpClient();
             // 实例化HTTP方法
-            HttpPost request = new HttpPost();
+            HttpPost httpPost = new HttpPost();
             //添加头信息
             if(headers!=null){
                 for (Iterator iter = headers.keySet().iterator(); iter.hasNext(); ) {
                     String key = (String)iter.next();
                     String value = String.valueOf(headers.get(key));
-                    request.addHeader(key,value);
+                    httpPost.addHeader(key,value);
                 }
             }
-            request.setURI(new URI(url));
+            httpPost.setURI(new URI(url));
             //设置参数
             List<NameValuePair> nvps = new ArrayList<NameValuePair>();
             if(params!=null){
@@ -82,8 +85,8 @@ public class HttpUtils {
                     //System.out.println(name +"-"+value);
                 }
             }
-            request.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
-            HttpResponse response = client.execute(request);
+            httpPost.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
+            HttpResponse response = client.execute(httpPost);
             if(!url.contains("login")&&cookieStore!=null){
                 client.setCookieStore(cookieStore);
             }
@@ -102,7 +105,7 @@ public class HttpUtils {
                 return sb.toString();
             }
             //不知道为啥还得手动去关闭响应链接？？？
-            request.releaseConnection();
+            httpPost.releaseConnection();
             //302重定向
             if(code==HttpStatus.SC_MOVED_TEMPORARILY){
                 Header header = response.getFirstHeader("location"); // 跳转的目标地址是在 HTTP-HEAD 中的

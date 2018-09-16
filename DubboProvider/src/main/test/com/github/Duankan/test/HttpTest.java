@@ -1,9 +1,16 @@
 package com.github.Duankan.test;
 
+import com.alibaba.fastjson.JSONObject;
 import com.github.Duankan.utils.HttpUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class HttpTest {
@@ -20,7 +27,12 @@ public class HttpTest {
         params.put("username", "java");
         params.put("password", "123");
         String response = httpUtils.doPost("http://localhost:8085/dubboConsumer/login", params,null);
-//        String rps2=httpUtils.doGet("http://localhost:8085/dubboConsumer/redirect");
+        String rps2=httpUtils.doGet("http://localhost:8085/dubboConsumer/rest_getUser");
+        //com.alibaba.fastjson解析json格式的数据
+        JSONObject object= (JSONObject) JSONObject.parse(rps2);
+        String code= object.getString("code");
+        String msg = object.getString("msg");
+        JSONObject entity = object.getJSONObject("object");
     }
 
     /**
@@ -45,6 +57,18 @@ public class HttpTest {
          */
         String resp = httpUtils.doPost("http://www.datalearner.com/login", params,headers);
         String resp2 = httpUtils.doGet("http://www.datalearner.com/manage/paper_note");
+        //jsoup解析网页
+        Document document= Jsoup.parse(resp2,"UTF-8");
+        Element element=document.getElementById("main_div");
+        Elements elements = element.getElementsByClass("list-group");
+        List<Map<String,String>> list=new ArrayList<>();
+        for (Element el:elements){
+            Map<String,String> map = new HashMap<String,String>();
+            String title =el.getElementsByClass("side-bar-title").first().text();
+            map.put("side-bar-title",title);
+            list.add(map);
+        }
+        System.out.println(list.size());
 //        String rsp=httpUtils.doGet("http://localhost:8085/dubboConsumer/rest_getUser");
     }
 
