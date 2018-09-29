@@ -28,8 +28,8 @@ public class TestRealm extends AuthorizingRealm {
     IUsers iUsers;
     @Autowired
     IRole iRole;
-//    @Autowired
-//    IPermission iPermission;
+    @Autowired
+    IPermission iPermission;
     //授权
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
@@ -40,14 +40,14 @@ public class TestRealm extends AuthorizingRealm {
         for (RolePo r:rs){
             roles.add(r.getRolename());
         }
-//        List<PermissionPo> permissionPos=iPermission.getPermissionByRoleid(usersPo.getId());
-//        Set<String> ps =new HashSet<>();
-//        for (PermissionPo po:permissionPos){
-//            ps.add(po.getPermissionname());
-//        }
+        List<PermissionPo> permissionPos=iPermission.getPermissionByRoleid(usersPo.getId());
+        Set<String> ps =new HashSet<>();
+        for (PermissionPo po:permissionPos){
+            ps.add(po.getPermissionname());
+        }
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
         simpleAuthorizationInfo.setRoles(roles);
-//        simpleAuthorizationInfo.setStringPermissions(ps);
+        simpleAuthorizationInfo.setStringPermissions(ps);
         return simpleAuthorizationInfo;
     }
 
