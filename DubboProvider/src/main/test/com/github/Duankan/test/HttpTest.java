@@ -23,10 +23,10 @@ public class HttpTest {
     public void getTest() throws Exception {
         HttpUtils httpUtils = new HttpUtils();
         Map<String, String> params = new HashMap<>();
-        params.put("username", "dankin");
+        params.put("username", "java");
         params.put("password", "123");
         String response = httpUtils.doPost("http://localhost:8085/dubboConsumer/login", params,null);
-        String rps2=httpUtils.doGet("http://localhost:8085/dubboConsumer/rest_getUser");
+        String rps2=httpUtils.doPost("http://localhost:8085/dubboConsumer/redirect",null,null);
         //com.alibaba.fastjson解析json格式的数据
         JSONObject object= (JSONObject) JSONObject.parse(rps2);
         String code= object.getString("code");
