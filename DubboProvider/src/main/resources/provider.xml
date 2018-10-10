@@ -13,14 +13,15 @@
     <!-- service实现类作为本地的一个bean -->
     <bean id="Mydemo" class="com.github.Duankan.service.impl.DubboServiceImpl"/>
     <!-- 声明需要暴露的服务接口 -->
-    <dubbo:service interface="com.github.Duankan.service.IDubboService" ref="Mydemo"/>
+    <dubbo:service interface="com.github.Duankan.service.IDubboService" ref="Mydemo" group="test"/>
     <!--shiro的userService-->
     <bean id="IUsers" class="com.github.Duankan.service.impl.UsersServiceImpl"></bean>
-    <dubbo:service interface="com.github.Duankan.service.IUsers" ref="IUsers"></dubbo:service>
+    <dubbo:service interface="com.github.Duankan.service.IUsers" ref="IUsers" group="shiro"></dubbo:service>
     <!--shiro的roleService-->
     <bean id="IRole" class="com.github.Duankan.service.impl.RoleServiceImpl"></bean>
-    <dubbo:service interface="com.github.Duankan.service.IRole" ref="IRole"></dubbo:service>
+    <dubbo:service interface="com.github.Duankan.service.IRole" ref="IRole" group="shiro"></dubbo:service>
     <!--shiro的permissionService-->
     <bean id="IPermission" class="com.github.Duankan.service.impl.PermissionServiceImpl"></bean>
-    <dubbo:service interface="com.github.Duankan.service.IPermission" ref="IPermission"></dubbo:service>
+    <dubbo:service interface="com.github.Duankan.service.IPermission" ref="IPermission" group="shiro"></dubbo:service>
+    <!--#####服务分组：当一个接口有多种实现时，可以用group区分#####-->
 </beans>

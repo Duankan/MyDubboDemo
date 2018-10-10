@@ -25,6 +25,39 @@
         <property name="maxWaitMillis" value="${redis.maxWait}"/>
         <property name="testOnBorrow" value="${redis.testOnBorrow}"/>
     </bean>
+    <!-- redis集群连接池配置 -->
+    <!--<bean id="redisClusterConfig" class="org.springframework.data.redis.connection.RedisClusterConfiguration">-->
+        <!--<property name="maxRedirects" value="3"></property>-->
+        <!--<property name="clusterNodes">-->
+            <!--<set>-->
+                <!--<bean class="org.springframework.data.redis.connection.RedisClusterNode">-->
+                    <!--<constructor-arg name="host" value="127.0.0.1"/>-->
+                    <!--<constructor-arg name="port" value="7001"/>-->
+                <!--</bean>-->
+                <!--<bean class="org.springframework.data.redis.connection.RedisClusterNode">-->
+                    <!--<constructor-arg name="host" value="127.0.0.1"/>-->
+                    <!--<constructor-arg name="port" value="7002"/>-->
+                <!--</bean>-->
+                <!--<bean class="org.springframework.data.redis.connection.RedisClusterNode">-->
+                    <!--<constructor-arg name="host" value="127.0.0.1"/>-->
+                    <!--<constructor-arg name="port" value="7003"/>-->
+                <!--</bean>-->
+                <!--<bean class="org.springframework.data.redis.connection.RedisClusterNode">-->
+                    <!--<constructor-arg name="host" value="127.0.0.1"/>-->
+                    <!--<constructor-arg name="port" value="7004"/>-->
+                <!--</bean>-->
+                <!--<bean class="org.springframework.data.redis.connection.RedisClusterNode">-->
+                    <!--<constructor-arg name="host" value="127.0.0.1"/>-->
+                    <!--<constructor-arg name="port" value="7005"/>-->
+                <!--</bean>-->
+                <!--<bean class="org.springframework.data.redis.connection.RedisClusterNode">-->
+                    <!--<constructor-arg name="host" value="127.0.0.1"/>-->
+                    <!--<constructor-arg name="port" value="7006"/>-->
+                <!--</bean>-->
+            <!--</set>-->
+        <!--</property>-->
+    <!--</bean>-->
+
     <!-- redis连接工厂 -->
     <bean id="connectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
         <property name="poolConfig" ref="poolConfig"/>
@@ -33,11 +66,19 @@
         <property name="password" value=""/>
         <property name="timeout" value="${redis.timeout}"></property>
     </bean>
+    <!-- 集群的连接工厂配置 -->
+    <!--<bean id="connectionFactory2" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">-->
+        <!--<constructor-arg name="clusterConfig" ref="redisClusterConfig"></constructor-arg>-->
+        <!--<constructor-arg name="poolConfig" ref="poolConfig"></constructor-arg>-->
+    <!--</bean>-->
+
     <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
         <property name="connectionFactory" ref="connectionFactory"/>
+        <!--序列化key-->
         <property name="keySerializer">
             <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
         </property>
+        <!--序列化value-->
         <property name="valueSerializer">
             <bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer"/>
         </property>

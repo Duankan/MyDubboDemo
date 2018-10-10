@@ -39,7 +39,6 @@ public class HttpUtils {
             //发送get请求
             HttpGet request = new HttpGet(url);
 //            //保存登录信息
-//            HttpClientContext localContext = new HttpClientContext();
             HttpResponse response = client.execute(request);
             if(cookieStore!=null){
                 client.setCookieStore(cookieStore);
