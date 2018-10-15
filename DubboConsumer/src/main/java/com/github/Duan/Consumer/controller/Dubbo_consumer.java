@@ -46,7 +46,7 @@ public class Dubbo_consumer {
     //写一个重定向测试httpClient
     @RequestMapping("/redirect")
     public String redirect(){
-        return "redirect:/consumer";
+        return "redirect:/dubboConsumer/consumer";
     }
     //shiro
     @RequiresRoles("admin1")

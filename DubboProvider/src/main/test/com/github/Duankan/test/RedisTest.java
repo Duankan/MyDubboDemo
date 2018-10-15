@@ -1,6 +1,5 @@
 package com.github.Duankan.test;
 
-import com.github.Duankan.po.GitPo;
 import com.github.Duankan.utils.RedisUtil;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,9 +55,9 @@ public class RedisTest extends BaseTest {
         //设置 redis 字符串数据
 //        jedis.set("runoobkey", "学习redis");
 //        System.out.println(jedis.get("dankin"));
-        GitPo gitPo = new GitPo();
-        gitPo.setName("李青青");
-        gitPo.setAddr("湖北襄阳");//set支持string和byte
+//        GitPo gitPo = new GitPo();
+//        gitPo.setName("李青青");
+//        gitPo.setAddr("湖北襄阳");//set支持string和byte
 //        jedis.set("gitpo".getBytes(), serialize(gitPo));
     }
 

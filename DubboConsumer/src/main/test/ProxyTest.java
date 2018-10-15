@@ -1,19 +1,23 @@
-import com.github.Duan.Consumer.proxy.DynamicProxyHandler;
-import com.github.Duan.Consumer.proxy.ProxyDemoInterface;
-import com.github.Duan.Consumer.proxy.ProxyImpl;
+import com.github.Duan.Consumer.proxy.*;
 import org.junit.Test;
-
-import java.lang.reflect.Proxy;
 
 public class ProxyTest {
     /**
-     * 动态代理
+     * 动态代理(jdk)
      */
     @Test
-    public void test(){
-        ProxyImpl proxy=new ProxyImpl();
-        ProxyDemoInterface demoInterface= (ProxyDemoInterface) Proxy.newProxyInstance(ProxyDemoInterface.class.getClassLoader(),
-                new Class[]{ProxyDemoInterface.class},new DynamicProxyHandler(proxy));
-        proxy.dosth();
+    public void test() {
+        ProxyImpl proxy = new ProxyImpl();
+        ProxyDemoInterface demoInterface= (ProxyDemoInterface) new DynamicProxyHandler(proxy).getProxyInstance();
+        demoInterface.dosth();
+    }
+    /**
+     * cglib代理
+     */
+    @Test
+    public void test2(){
+        CglibImpl target=new CglibImpl();
+        CglibImpl proxy= (CglibImpl) new CglibProxyHandler(target).getProxyInstance();
+        proxy.saySth();
     }
 }
