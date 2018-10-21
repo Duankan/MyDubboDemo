@@ -74,32 +74,7 @@
     <!--预定义依赖项-->
     <dependencyManagement>
         <dependencies>
-            <!--shiro-->
-            <dependency>
-                <groupId>org.apache.shiro</groupId>
-                <artifactId>shiro-core</artifactId>
-                <version>${shiro-core.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.shiro</groupId>
-                <artifactId>shiro-web</artifactId>
-                <version>${shiro-web.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.shiro</groupId>
-                <artifactId>shiro-cas</artifactId>
-                <version>${shiro-cas.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.shiro</groupId>
-                <artifactId>shiro-spring</artifactId>
-                <version>${shiro-spring.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.shiro</groupId>
-                <artifactId>shiro-ehcache</artifactId>
-                <version>${shiro-ehcache.version}</version>
-            </dependency>
+            <!--###SSM所需要的依赖 start!!-->
             <!-- 添加 commons 依赖包 -->
             <dependency>
                 <groupId>commons-fileupload</groupId>
@@ -116,7 +91,6 @@
                 <artifactId>commons-lang3</artifactId>
                 <version>${commons-lang3.version}</version>
             </dependency>
-
             <!-- 添加 spring 依赖包 -->
             <dependency>
                 <groupId>org.springframework</groupId>
@@ -153,38 +127,6 @@
                 <artifactId>spring-test</artifactId>
                 <version>${spring.framework.version}</version>
             </dependency>
-            <!--<dependency>-->
-                <!--<groupId>org.springframework</groupId>-->
-                <!--<artifactId>spring-aop</artifactId>-->
-                <!--<version>${spring.framework.version}</version>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-                <!--<groupId>org.springframework</groupId>-->
-                <!--<artifactId>spring-beans</artifactId>-->
-                <!--<version>${spring.framework.version}</version>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-                <!--<groupId>org.springframework</groupId>-->
-                <!--<artifactId>spring-tx</artifactId>-->
-                <!--<version>${spring.framework.version}</version>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-                <!--<groupId>org.springframework</groupId>-->
-                <!--<artifactId>spring-web</artifactId>-->
-                <!--<version>${spring.framework.version}</version>-->
-            <!--</dependency>-->
-            <!-- 添加 aspectJ 依赖包 -->
-            <dependency>
-                <groupId>org.aspectj</groupId>
-                <artifactId>aspectjweaver</artifactId>
-                <version>${aspectj.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.aspectj</groupId>
-                <artifactId>aspectjrt</artifactId>
-                <version>${aspectj.version}</version>
-            </dependency>
-
             <!-- 添加 mybatis 依赖包 -->
             <dependency>
                 <groupId>org.mybatis</groupId>
@@ -196,8 +138,76 @@
                 <artifactId>mybatis-spring</artifactId>
                 <version>${mybatis-spring.version}</version>
             </dependency>
+            <!-- 添加 mysql 驱动 -->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql-connector-java.version}</version>
+            </dependency>
+            <!-- 添加 jackson 依赖包 -->
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <!-- 添加 servlet 依赖包 -->
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>javax.servlet-api</artifactId>
+                <version>${javax.servlet-api.version}</version>
+            </dependency>
+            <!-- 添加 jstl 依赖包 -->
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>jstl</artifactId>
+                <version>${jstl.version}</version>
+            </dependency>
+            <!--###SSM所需要的依赖  end!!!-->
 
-            <!-- 添加 druid 依赖包 -->
+            <!-- 添加 logback 依赖包 -->
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
+            <!--shiro所需要的依赖-->
+            <dependency>
+                <groupId>org.apache.shiro</groupId>
+                <artifactId>shiro-core</artifactId>
+                <version>${shiro-core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.shiro</groupId>
+                <artifactId>shiro-web</artifactId>
+                <version>${shiro-web.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.shiro</groupId>
+                <artifactId>shiro-cas</artifactId>
+                <version>${shiro-cas.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.shiro</groupId>
+                <artifactId>shiro-spring</artifactId>
+                <version>${shiro-spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.shiro</groupId>
+                <artifactId>shiro-ehcache</artifactId>
+                <version>${shiro-ehcache.version}</version>
+            </dependency>
+            <!-- 添加 aspectJ 依赖包（aop需要） -->
+            <dependency>
+                <groupId>org.aspectj</groupId>
+                <artifactId>aspectjweaver</artifactId>
+                <version>${aspectj.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.aspectj</groupId>
+                <artifactId>aspectjrt</artifactId>
+                <version>${aspectj.version}</version>
+            </dependency>
+            <!-- 添加 druid 依赖包（操作数据源） -->
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>druid</artifactId>
@@ -209,41 +219,6 @@
                 <artifactId>fastjson</artifactId>
                 <version>${fastjson.version}</version>
             </dependency>
-            <!-- 添加 mysql 驱动 -->
-            <dependency>
-                <groupId>mysql</groupId>
-                <artifactId>mysql-connector-java</artifactId>
-                <version>${mysql-connector-java.version}</version>
-            </dependency>
-
-            <!-- 添加 jackson 依赖包 -->
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-databind</artifactId>
-                <version>${jackson.version}</version>
-            </dependency>
-
-            <!-- 添加 servlet 依赖包 -->
-            <dependency>
-                <groupId>javax.servlet</groupId>
-                <artifactId>javax.servlet-api</artifactId>
-                <version>${javax.servlet-api.version}</version>
-            </dependency>
-
-            <!-- 添加 jstl 依赖包 -->
-            <dependency>
-                <groupId>javax.servlet</groupId>
-                <artifactId>jstl</artifactId>
-                <version>${jstl.version}</version>
-            </dependency>
-
-            <!-- 添加 logback 依赖包 -->
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-classic</artifactId>
-                <version>${logback.version}</version>
-            </dependency>
-
         </dependencies>
     </dependencyManagement>
 
