@@ -11,20 +11,5 @@ public class DubboDemo {
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("classpath:provider.xml");
         context.start();
         System.in.read();
-//        try {
-//            ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("classpath:provider.xml");
-//            context.start();
-//        } catch (Exception e) {
-//            log.error("== DubboProvider context start error:", e);
-//        }
-//        synchronized (DubboDemo.class) {
-//            while (true) {
-//                try {
-//                    DubboDemo.class.wait();
-//                } catch (InterruptedException e) {
-//                    log.error("== synchronized error:", e);
-//                }
-//            }
-//        }
     }
 }

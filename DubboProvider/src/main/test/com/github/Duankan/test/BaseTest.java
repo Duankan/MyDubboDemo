@@ -11,7 +11,7 @@ import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 //@ContextConfiguration(locations={"classpath*:spring-redis.xml"})
-@ContextConfiguration(locations={"classpath*:spring-mybatis.xml"})
+@ContextConfiguration(locations={"classpath*:spring-mybatis.xml","classpath*:spring-redis.xml"})
 //@ContextConfiguration(locations={"classpath*:spring-redisCluster.xml","classpath*:spring-redis.xml"})
 public class BaseTest {
     @Autowired

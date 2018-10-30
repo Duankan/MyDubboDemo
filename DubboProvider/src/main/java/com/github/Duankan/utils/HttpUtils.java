@@ -1,13 +1,13 @@
 package com.github.Duankan.utils;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.http.*;
+import org.apache.http.Header;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
@@ -15,7 +15,6 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.xml.soap.Name;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URI;
@@ -30,19 +29,17 @@ import java.util.Map;
 public class HttpUtils {
     private Logger logger = LoggerFactory.getLogger(HttpUtils.class);
     private static CookieStore cookieStore;
-    private static DefaultHttpClient client = new DefaultHttpClient();
-
     //Http Get 请求示例
     public String doGet(String url) {
         try {
-//            DefaultHttpClient client = new DefaultHttpClient();
+            DefaultHttpClient client = new DefaultHttpClient();
             //发送get请求
             HttpGet request = new HttpGet(url);
-//            //保存登录信息
-            HttpResponse response = client.execute(request);
+           //保存登录信息
             if(cookieStore!=null){
                 client.setCookieStore(cookieStore);
             }
+            HttpResponse response = client.execute(request);
             //拿到cookie并保存起来  并没有起效！！！
             cookieStore = client.getCookieStore();
             /**请求发送成功，并得到响应**/
@@ -62,7 +59,7 @@ public class HttpUtils {
         BufferedReader in = null;
         try {
             // 定义HttpClient
-//            DefaultHttpClient client = new DefaultHttpClient();
+            DefaultHttpClient client = new DefaultHttpClient();
             // 实例化HTTP方法
             HttpPost httpPost = new HttpPost();
             //添加头信息
@@ -81,15 +78,14 @@ public class HttpUtils {
                     String name = (String) iter.next();
                     String value = String.valueOf(params.get(name));
                     nvps.add(new BasicNameValuePair(name, value));
-                    //System.out.println(name +"-"+value);
                 }
             }
             httpPost.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
-            HttpResponse response = client.execute(httpPost);
             if(!url.contains("login")&&cookieStore!=null){
                 client.setCookieStore(cookieStore);
             }
-            cookieStore =client.getCookieStore();
+            HttpResponse response = client.execute(httpPost);
+            cookieStore = client.getCookieStore();
             int code = response.getStatusLine().getStatusCode();
             if (code==HttpStatus.SC_OK){ //200：请求成功
                 in = new BufferedReader(new InputStreamReader(response.getEntity()

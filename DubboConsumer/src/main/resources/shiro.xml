@@ -17,6 +17,7 @@
                 <!--/login.jsp=anon-->
                 /= anon
                 /dubboConsumer/login=anon    <!--登录不需要认证-->
+                /dubboConsumer/HttpGet=anon
                 <!--/logout = logout-->
                 <!--/role/** = roles[admin]-->
                 <!--/permission/** = perms[permssion:look]-->

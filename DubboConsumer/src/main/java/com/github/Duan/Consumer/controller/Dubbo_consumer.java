@@ -20,6 +20,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 @Controller
 @RequestMapping("/dubboConsumer")
 public class Dubbo_consumer {
@@ -98,4 +101,18 @@ public class Dubbo_consumer {
             return responsePojo;
         }
     }
+
+    //get服务
+    @RequestMapping("/HttpGet")
+    @ResponseBody
+    public ResponsePojo<String> accessResoureForHttpGet(HttpServletRequest request, HttpServletResponse response){
+        String method=request.getMethod();//判断请求的方法，是get,post,head
+        ResponsePojo<String> responsePojo=new ResponsePojo<>();
+        responsePojo.setCode(ResponseEnum.SUCCESS.getCode());
+        responsePojo.setMsg(ResponseEnum.SUCCESS.getDisplayName());
+        responsePojo.setObject("httget");
+//        response.setStatus(500);
+        return responsePojo;
+    }
+    //post服务
 }
