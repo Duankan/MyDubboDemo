@@ -29,18 +29,18 @@ import java.util.Map;
 public class HttpUtils {
     private Logger logger = LoggerFactory.getLogger(HttpUtils.class);
     private static CookieStore cookieStore;
+
     //Http Get 请求示例
     public String doGet(String url) {
         try {
             DefaultHttpClient client = new DefaultHttpClient();
             //发送get请求
             HttpGet request = new HttpGet(url);
-           //保存登录信息
-            if(cookieStore!=null){
+            //保存登录信息
+            if (cookieStore != null) {
                 client.setCookieStore(cookieStore);
             }
             HttpResponse response = client.execute(request);
-            //拿到cookie并保存起来  并没有起效！！！
             cookieStore = client.getCookieStore();
             /**请求发送成功，并得到响应**/
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
@@ -55,7 +55,7 @@ public class HttpUtils {
     }
 
     //封装post请求
-    public String doPost(String url, Map params,Map headers) {
+    public String doPost(String url, Map params, Map headers) {
         BufferedReader in = null;
         try {
             // 定义HttpClient
@@ -63,17 +63,17 @@ public class HttpUtils {
             // 实例化HTTP方法
             HttpPost httpPost = new HttpPost();
             //添加头信息
-            if(headers!=null){
+            if (headers != null) {
                 for (Iterator iter = headers.keySet().iterator(); iter.hasNext(); ) {
-                    String key = (String)iter.next();
+                    String key = (String) iter.next();
                     String value = String.valueOf(headers.get(key));
-                    httpPost.addHeader(key,value);
+                    httpPost.addHeader(key, value);
                 }
             }
             httpPost.setURI(new URI(url));
             //设置参数
             List<NameValuePair> nvps = new ArrayList<NameValuePair>();
-            if(params!=null){
+            if (params != null) {
                 for (Iterator iter = params.keySet().iterator(); iter.hasNext(); ) {
                     String name = (String) iter.next();
                     String value = String.valueOf(params.get(name));
@@ -81,15 +81,15 @@ public class HttpUtils {
                 }
             }
             httpPost.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
-            if(!url.contains("login")&&cookieStore!=null){
+            if (!url.contains("login") && cookieStore != null) {
                 client.setCookieStore(cookieStore);
             }
             HttpResponse response = client.execute(httpPost);
             cookieStore = client.getCookieStore();
             int code = response.getStatusLine().getStatusCode();
-            if (code==HttpStatus.SC_OK){ //200：请求成功
+            if (code == HttpStatus.SC_OK) { //200：请求成功
                 in = new BufferedReader(new InputStreamReader(response.getEntity()
-                        .getContent(),"utf-8"));
+                        .getContent(), "utf-8"));
                 StringBuffer sb = new StringBuffer("");
                 String line = "";
                 String NL = System.getProperty("line.separator");
@@ -102,18 +102,18 @@ public class HttpUtils {
             //不知道为啥还得手动去关闭响应链接？？？
             httpPost.releaseConnection();
             //302重定向
-            if(code==HttpStatus.SC_MOVED_TEMPORARILY){
+            if (code == HttpStatus.SC_MOVED_TEMPORARILY) {
                 Header header = response.getFirstHeader("location"); // 跳转的目标地址是在 HTTP-HEAD 中的
                 // 这就是跳转后的地址，再向这个地址发出新申请，以便得到跳转后的信息是啥。
 //                String newuri = "http://localhost:8085/dubboConsumer/"+StringUtils.substringBetween(header.getValue(),"/",";");
-                String newuri ="http://www.datalearner.com/"+header.getValue();
+                String newuri = "http://www.datalearner.com/" + header.getValue();
                 HttpGet newGet = new HttpGet(newuri);
                 HttpResponse newResponse = client.execute(newGet);
-                code =newResponse.getStatusLine().getStatusCode();
+                code = newResponse.getStatusLine().getStatusCode();
                 //200：请求成功
-                if (code==HttpStatus.SC_OK){
+                if (code == HttpStatus.SC_OK) {
                     in = new BufferedReader(new InputStreamReader(newResponse.getEntity()
-                            .getContent(),"utf-8"));
+                            .getContent(), "utf-8"));
                     StringBuffer sb2 = new StringBuffer("");
                     String line = "";
                     String NL = System.getProperty("line.separator");
@@ -123,8 +123,7 @@ public class HttpUtils {
                     in.close();
                     return sb2.toString();
                 }
-            }
-            else {
+            } else {
                 System.out.println("状态码：" + code);
                 return null;
             }

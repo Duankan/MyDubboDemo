@@ -3,11 +3,7 @@ package com.github.Duankan.service.impl;
 import com.github.Duankan.dao.UserPoMapper;
 import com.github.Duankan.po.UserPo;
 import com.github.Duankan.service.IDubboService;
-import com.github.Duankan.utils.RedisUtil;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-
 import javax.annotation.Resource;
-
 
 public class DubboServiceImpl   implements IDubboService {
     @Resource

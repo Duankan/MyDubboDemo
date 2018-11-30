@@ -3,9 +3,8 @@ package com.github.Duankan.service.impl;
 import com.github.Duankan.dao.UsersPoMapper;
 import com.github.Duankan.po.UsersPo;
 import com.github.Duankan.service.IUsers;
-import org.springframework.stereotype.Service;
-
 import javax.annotation.Resource;
+
 public class UsersServiceImpl implements IUsers {
     @Resource
     UsersPoMapper usersPoMapper;

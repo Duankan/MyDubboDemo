@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>登录首页</title>
+    <script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
     <style>
         *{
             box-sizing: border-box;
@@ -71,4 +72,19 @@
     <div id="bottom"></div>
 </div>
 </body>
+<script>
+    (function ($) {
+        $(function () {
+            Ready.getJson();
+        });
+        var Ready = {
+            getJson: function () {
+                $.getJSON('http://localhost:8085/static/test.json', function (res) {
+                    debugger
+                    console.log(res);
+                });
+            }
+        }
+    })(jQuery);
+</script>
 </html>

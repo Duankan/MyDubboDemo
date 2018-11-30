@@ -1,0 +1,17 @@
+{
+  "XzqMJ": {
+    "url": "http://192.168.1.93:8080/hgis/ows",
+    "typename": "ktw:DLTB_hebing_chulihou",
+    "groupFields": "行政区",
+    "statisticsFields": [
+      {
+        "operate": "sum",
+        "field": "TBMJ"
+      }
+    ],
+    "clip": "0",
+    "do":"sumAll",
+    "areacode":"420100",
+    "cqlCondition": {"01":"耕地","02":"林地","03":"园地"}
+  }
+}

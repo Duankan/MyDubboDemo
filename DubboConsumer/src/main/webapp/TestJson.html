@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>读取Json文件</title>
+    <script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+    <script src="../../../../DubboConsumer/src/main/webapp/static/test.json"></script>
+</head>
+<body>
+
+</body>
+<script>
+    (function ($) {
+        $(function () {
+            debugger
+            var a=[[1,2,3,4,5,6],[1,2,3,4,5,6]];
+            var i=0;
+            // Ready.getJson();
+        });
+        var Ready = {
+            getJson: function () {
+                $.getJSON('http://192.168.1.86:8085/static/test.json', function (res) {
+                    console.log(res);
+                });
+            }
+        }
+    })(jQuery);
+</script>
+</html>
