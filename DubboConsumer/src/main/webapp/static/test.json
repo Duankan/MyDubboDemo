@@ -13,5 +13,14 @@
     "do":"sumAll",
     "areacode":"420100",
     "cqlCondition": {"01":"耕地","02":"林地","03":"园地"}
+  },
+  "ss":{
+    "typeName":[
+      {
+        "cityLayer":"ktw:city1",
+        "countyLayer":"ktw:county1"
+      }
+    ],
+    "test":"1111"
   }
 }

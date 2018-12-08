@@ -6,6 +6,7 @@
     <script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
     <script src="static/js/easyui/jquery.easyui.min.js"></script>
     <script src="static/js/easyui/easyui-lang-zh_CN.js"></script>
+    <script src="static/js/linq/linq.min.js"></script>
     <!--引进leaflet-->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css"
           integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
@@ -13,36 +14,45 @@
     <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"
             integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw=="
             crossorigin=""></script>
+    <script src="static/js/ztree/js/jquery.ztree.core.js"></script>
+    <!--<link rel="stylesheet" href="static/js/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css">-->
+    <link rel="stylesheet" href="static/js/ztree/css2/ztree.css">
     <style>
         /**盒子模型**/
-        * {
-            box-sizing: border-box;
-            overflow: hidden;
-        }
+        /** {*/
+        /*box-sizing: border-box;*/
+        /*overflow: hidden;*/
+        /*}*/
+
         body {
             width: 100%;
             height: 100vh;
         }
+
         .head {
             /*background: aqua;*/
             width: 100%;
             height: 10%;
         }
+
         .content {
             /*background: #f22613;*/
             width: 100%;
             height: 40%;
         }
-        .bottom {
-            /*background: yellow;*/
-            width: 100%;
-            height: 10%;
-        }
+
+        /*.bottom {*/
+        /*background: gray;*/
+        /*width: 20%;*/
+        /*height: 50%;*/
+        /*}*/
+
         .select {
             width: 80px;
             height: 30px;
             border: aqua solid 2px;
         }
+
         .datagrid {
             width: 100%;
             height: 35%;
@@ -52,105 +62,618 @@
 <body>
 <div class="head"></div>
 <div class="content" id="mapid"></div>
-<div class="datagrid"></div>
-<div class="bottom">
-    <select class="select">
-        <option value="ok1">1</option>
-        <option value="ok2">2</option>
-        <option value="ok3">3</option>
-    </select>
+<!--<div class="datagrid"></div>-->
+<div>
+    <ul class="list">
+        <li class="title"> 城市：<input id="citySel" type="text" readonly value="" style="width:120px;"/>
+            <a id="menuBtn" href="#" onclick="showMenu();return false">选择</a></li>
+    </ul>
+</div>
+<div id="bottom" class="bottom" style="display:none; position: absolute;">
+    <ul id="treeDemo" class="ztree" style="margin-top:0; width:160px;"></ul>
 </div>
 </body>
 <script>
-    (function ($) {
-        var winWidth;
-        $(function () {
-            Ready.loadGeojson();
-            Ready.SelectClick();
-            Ready.InitDatagrid();
-        });
-        var Ready = {
-            //初始化地图
-            initMap: function (geojsonFeature) {
-                var mymap = L.map('mapid').setView([26.8231, 112.6126], 10);
-                var myLayer = L.geoJSON().addTo(mymap);
-                myLayer.addData(geojsonFeature);
-            },
-            //获取geojson数据
-            loadGeojson: function () {
-                $.getJSON('static/syxzq.json', function (res) {
-                    if (res) {
-                        Ready.initMap(res)
-                    }
-                });
-            },
-            //勾选框点击事件
-            SelectClick: function () {
-                $(".select").change(function () {
-                    alert(this.value)
-                })
-            },
-            //初始化datagrid
-            InitDatagrid: function () {
-                winWidth = $(window).width() >= 1000 ? $(window).width() : 1000;
-                var width = (winWidth * 0.98 - 45) / 12;
-                $('#datagrid').datagrid({
-                    pagination: true,
-                    rownumbers: true,
-                    loadMsg: "数据正在加载中，请稍后......",
-                    fit: true,        //自动大小
-                    fitColumns: true, //自适应列宽
-                    singleSelect: true,  //是否单选
-                    idField: 'Project_id',
-                    columns: [
-                        [
-                            {field: 'time', title: '统计时间', width: width, align: 'center', rowspan: 5,},
-                            {field: 'xzqname', title: '县市区', width: width, align: 'center', rowspan: 5,},
-                            {title: '行政区合计()', colspan: 10}],
-                        [
-                            {
-                                field: 'sum', title: '总面积', width: width, align: 'center', rowspan: 4,
-                            },
-                            {title: '七大类用地', width: width, align: 'center', colspan: 9, rowspan: 1},
-                        ],
-                        [
-                            {
-                                field: 'gendi', title: '耕地', width: width, align: 'center', rowspan: 3,
-                            },
-                            {title: '六大类用地', align: 'center', colspan: 7, rowspan: 1},
-                            {
-                                field: 'qita', title: '其他土地', width: width, align: 'center', rowspan: 3,
-                            },
-                        ],
-                        [
-                            {
-                                field: 'yuan', title: '园地', width: width, align: 'center', rowspan: 2,
-                            },
-                            {
-                                title: '林,草', width: width, align: 'center', colspan: 3, rowspan: 1
-                            },
-                            {
-                                field: 'jiaot', title: '交通设施', width: width, align: 'center', rowspan: 2,
-                            },
-                            {
-                                field: 'shuili', title: '水利用地', width: width, align: 'center', rowspan: 2,
-                            },
-                            {
-                                field: 'chenzhen', title: '城镇工矿', width: width, align: 'center', rowspan: 2,
-                            },
-                        ],
-                        [
-                            {
-                                field: 'lindi', title: '林地', width: 0.95 * width, align: 'center', rowspan: 1, colspan: 2,
-                            },
-                            {
-                                field: 'cao', title: '草地', width: width, align: 'center', rowspan: 1,
-                            }
-                        ]
-                    ]
-                });
+    var zTreeObj;
+    // zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
+    var setting = {
+        data: {
+            simpleData: {
+                enable: true
             }
+        },
+        callback: {
+            onClick: clickFun,
+        },
+    };
+    var winWidth;
+    // zTree 的数据属性，深入使用请参考 API 文档（zTreeNode 节点数据详解）
+    var zNodes = [];
+
+    function showMenu() {
+        var map = document.getElementById('mapid');
+        var citySelObject = $("#citySel");
+        var cityOffset = citySelObject.offset();
+        var height = map.offsetHeight == 0 ? 100 : map.offsetHeight;
+        $(".bottom").css({
+            height: map.offsetHeight,
+            left: cityOffset.left + "px",
+            top: cityOffset.top + citySelObject.outerHeight() + "px",
+            background: 'skyblue'
+        }).slideDown("fast");
+        $("body").bind("mousedown", onBodyDown);
+    }
+
+    function clickFun(ev, treeId, node) {
+        var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
+            nodes = zTree.getSelectedNodes(),
+            v = "";
+        nodes.sort(function compare(a, b) {
+            return a.id - b.id;
+        });
+        for (var i = 0, l = nodes.length; i < l; i++) {
+            v += nodes[i].name + ",";
         }
-    })(jQuery);
+        if (v.length > 0) v = v.substring(0, v.length - 1);
+        var cityObj = $("#citySel");
+        cityObj.attr("value", v);
+    }
+
+    function onBodyDown(event) {
+        if (!(event.target.id == "menuBtn" || event.target.id == "bottom" || $(event.target).parents("#bottom").length > 0)) {
+            hideMenu();
+            initZtree();
+        }
+    }
+
+    function hideMenu() {
+        $(".bottom").fadeOut("fast");
+        $("body").unbind("mousedown", onBodyDown);
+    }
+
+    function initZtree() {
+        var data = {
+            "url": "http://192.168.1.90:8086/hgis/wfs",
+            "typeName": [
+                {
+                    "cityLayer": "ktw:city1",
+                    "countyLayer": "ktw:county1",
+                    "villageLayer": "ktw:village1"
+                }
+            ]
+        };
+        $.ajax({
+            type: 'post',
+            async: false,
+            cache: false,
+            contentType: "application/json",
+            data: JSON.stringify(data),
+            url: "http://192.168.1.86:7081/onemap/TreeXzq/ToVillageLevel",
+            success: function (res) {
+                if (res.code == "1") {
+                    zNodes = res.rows;
+                    zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+                }
+            }
+        });
+    }
+
+    window.onresize = function (ev) {
+        var map = document.getElementById('mapid');
+        var citySelObject = $("#citySel");
+        var cityOffset = citySelObject.offset();
+        var mapObject = $("#mapid");
+        var mapOffset = mapObject.offset();
+        $(".bottom").css({
+            height: map.offsetHeight,
+            left: cityOffset.left + "px",
+            top: cityOffset.top + citySelObject.outerHeight() + "px",
+            background: 'skyblue'
+        }).slideDown("fast");
+    }
+    $(document).ready(function () {
+        initZtree();
+        Ready.loadGeojson();
+        var a = [{"SUM_TBMJ": "2265641.90", "XZQMC_1": "黄陂区", "PDJB": "", "DLMC": "茶园"}, {
+            "SUM_TBMJ": "592738.29",
+            "XZQMC_1": "洪山区",
+            "PDJB": "2",
+            "DLMC": "水浇地"
+        }, {"SUM_TBMJ": "6685.92", "XZQMC_1": "新洲区", "PDJB": "5", "DLMC": "水田"}, {
+            "SUM_TBMJ": "932.45",
+            "XZQMC_1": "",
+            "PDJB": "4",
+            "DLMC": "旱地"
+        }, {"SUM_TBMJ": "10184109.64", "XZQMC_1": "新洲区", "PDJB": "2", "DLMC": "旱地"}, {
+            "SUM_TBMJ": "54244853.13",
+            "XZQMC_1": "黄陂区",
+            "PDJB": "1",
+            "DLMC": "旱地"
+        }, {"SUM_TBMJ": "181980.818771878", "XZQMC_1": "蔡甸区", "PDJB": "3", "DLMC": "水田"}, {
+            "SUM_TBMJ": "6301.48",
+            "XZQMC_1": "新洲区",
+            "PDJB": "2",
+            "DLMC": "其他林地"
+        }, {"SUM_TBMJ": "4839.933986115", "XZQMC_1": "", "PDJB": "3", "DLMC": "水浇地"}, {
+            "SUM_TBMJ": "6.622934663E7",
+            "XZQMC_1": "汉南区",
+            "PDJB": "1",
+            "DLMC": "水浇地"
+        }, {"SUM_TBMJ": "6443.61", "XZQMC_1": "青山区", "PDJB": "3", "DLMC": "旱地"}, {
+            "SUM_TBMJ": "5298031.68",
+            "XZQMC_1": "洪山区",
+            "PDJB": "1",
+            "DLMC": "水田"
+        }, {"SUM_TBMJ": "21737.09", "XZQMC_1": "黄陂区", "PDJB": "", "DLMC": "灌木林地"}, {
+            "SUM_TBMJ": "27568158.416049257",
+            "XZQMC_1": "江夏区",
+            "PDJB": "3",
+            "DLMC": "水田"
+        }, {"SUM_TBMJ": "268298.47", "XZQMC_1": "东西湖区", "PDJB": "2", "DLMC": "水浇地"}, {
+            "SUM_TBMJ": "15471.180777456",
+            "XZQMC_1": "江夏区",
+            "PDJB": "3",
+            "DLMC": "水浇地"
+        }, {"SUM_TBMJ": "34372.79130352", "XZQMC_1": "", "PDJB": "3", "DLMC": "水田"}, {
+            "SUM_TBMJ": "164297.23974611",
+            "XZQMC_1": "江夏区",
+            "PDJB": "",
+            "DLMC": "茶园"
+        }, {"SUM_TBMJ": "97365.49", "XZQMC_1": "黄陂区", "PDJB": "", "DLMC": "其他园地"}, {
+            "SUM_TBMJ": "8793924.42",
+            "XZQMC_1": "洪山区",
+            "PDJB": "1",
+            "DLMC": "水浇地"
+        }, {"SUM_TBMJ": "2535470.87", "XZQMC_1": "东西湖区", "PDJB": "1", "DLMC": "果园"}, {
+            "SUM_TBMJ": "364060.120520529",
+            "XZQMC_1": "",
+            "PDJB": "2",
+            "DLMC": "水浇地"
+        }, {"SUM_TBMJ": "1.530268587E7", "XZQMC_1": "东西湖区", "PDJB": "1", "DLMC": "坑塘水面"}, {
+            "SUM_TBMJ": "97810.80",
+            "XZQMC_1": "青山区",
+            "PDJB": "2",
+            "DLMC": "旱地"
+        }, {"SUM_TBMJ": "74007.71", "XZQMC_1": "汉南区", "PDJB": "2", "DLMC": "水浇地"}, {
+            "SUM_TBMJ": "35904558.618525741",
+            "XZQMC_1": "蔡甸区",
+            "PDJB": "2",
+            "DLMC": "水田"
+        }, {"SUM_TBMJ": "4612483.90", "XZQMC_1": "新洲区", "PDJB": "3", "DLMC": "旱地"}, {
+            "SUM_TBMJ": "2649144.245061463",
+            "XZQMC_1": "蔡甸区",
+            "PDJB": "",
+            "DLMC": "其他林地"
+        }, {"SUM_TBMJ": "39130849.541990028", "XZQMC_1": "江夏区", "PDJB": "2", "DLMC": "水田"}, {
+            "SUM_TBMJ": "29011.83",
+            "XZQMC_1": "东西湖区",
+            "PDJB": "3",
+            "DLMC": "水浇地"
+        }, {"SUM_TBMJ": "903111.20", "XZQMC_1": "新洲区", "PDJB": "2", "DLMC": "茶园"}, {
+            "SUM_TBMJ": "631738.681790388",
+            "XZQMC_1": "",
+            "PDJB": "2",
+            "DLMC": "水田"
+        }, {"SUM_TBMJ": "17816707.146091210", "XZQMC_1": "蔡甸区", "PDJB": "", "DLMC": "坑塘水面"}, {
+            "SUM_TBMJ": "13468271.36",
+            "XZQMC_1": "黄陂区",
+            "PDJB": "3",
+            "DLMC": "水田"
+        }, {
+            "SUM_TBMJ": "951457.334218247",
+            "XZQMC_1": "汉阳区",
+            "PDJB": "1",
+            "DLMC": "水浇地"
+        }, {"SUM_TBMJ": "140161.706675883", "XZQMC_1": "江夏区", "PDJB": "2", "DLMC": "水浇地"}, {
+            "SUM_TBMJ": "10270045.54",
+            "XZQMC_1": "黄陂区",
+            "PDJB": "",
+            "DLMC": "坑塘水面"
+        }, {"SUM_TBMJ": "6453091.08", "XZQMC_1": "黄陂区", "PDJB": "", "DLMC": "其他林地"}, {
+            "SUM_TBMJ": "1316837.36",
+            "XZQMC_1": "洪山区",
+            "PDJB": "3",
+            "DLMC": "水田"
+        }, {"SUM_TBMJ": "59554.217795588", "XZQMC_1": "汉阳区", "PDJB": "2", "DLMC": "旱地"}, {
+            "SUM_TBMJ": "324920.48",
+            "XZQMC_1": "东西湖区",
+            "PDJB": "2",
+            "DLMC": "旱地"
+        }, {
+            "SUM_TBMJ": "958165.536936825",
+            "XZQMC_1": "蔡甸区",
+            "PDJB": "2",
+            "DLMC": "旱地"
+        }, {"SUM_TBMJ": "169319.19770467", "XZQMC_1": "", "PDJB": "2", "DLMC": "旱地"}, {
+            "SUM_TBMJ": "620978.02",
+            "XZQMC_1": "新洲区",
+            "PDJB": "4",
+            "DLMC": "旱地"
+        }, {"SUM_TBMJ": "11602.91", "XZQMC_1": "", "PDJB": "2", "DLMC": "果园"}, {
+            "SUM_TBMJ": "2459.25",
+            "XZQMC_1": "东西湖区",
+            "PDJB": "1",
+            "DLMC": "设施农用地"
+        }, {
+            "SUM_TBMJ": "2503737.9451959",
+            "XZQMC_1": "东西湖区",
+            "PDJB": "1",
+            "DLMC": "旱地"
+        }, {
+            "SUM_TBMJ": "987742.129341449",
+            "XZQMC_1": "江夏区",
+            "PDJB": "",
+            "DLMC": "果园"
+        }, {"SUM_TBMJ": "240182530.06426052", "XZQMC_1": "江夏区", "PDJB": "1", "DLMC": "水田"}, {
+            "SUM_TBMJ": "161546.71",
+            "XZQMC_1": "青山区",
+            "PDJB": "1",
+            "DLMC": "水浇地"
+        }, {"SUM_TBMJ": "2697397.132557719", "XZQMC_1": "江夏区", "PDJB": "", "DLMC": "坑塘水面"}, {
+            "SUM_TBMJ": "1819609.71",
+            "XZQMC_1": "新洲区",
+            "PDJB": "4",
+            "DLMC": "水浇地"
+        }, {"SUM_TBMJ": "38972.73", "XZQMC_1": "新洲区", "PDJB": "2", "DLMC": "其他园地"}, {
+            "SUM_TBMJ": "544509.843241937",
+            "XZQMC_1": "汉阳区",
+            "PDJB": "2",
+            "DLMC": "水浇地"
+        }, {"SUM_TBMJ": "192894343.48", "XZQMC_1": "黄陂区", "PDJB": "2", "DLMC": "水田"}, {
+            "SUM_TBMJ": "7264188.284896130",
+            "XZQMC_1": "江夏区",
+            "PDJB": "",
+            "DLMC": "其他林地"
+        }, {
+            "SUM_TBMJ": "2920180.05276941",
+            "XZQMC_1": "新洲区",
+            "PDJB": "2",
+            "DLMC": "果园"
+        }, {"SUM_TBMJ": "791185.910425077", "XZQMC_1": "蔡甸区", "PDJB": "1", "DLMC": "旱地"}, {
+            "SUM_TBMJ": "82664.09569197",
+            "XZQMC_1": "",
+            "PDJB": "3",
+            "DLMC": "旱地"
+        }, {"SUM_TBMJ": "1882993.99", "XZQMC_1": "汉南区", "PDJB": "1", "DLMC": "水田"}, {
+            "SUM_TBMJ": "489203.430040941",
+            "XZQMC_1": "蔡甸区",
+            "PDJB": "",
+            "DLMC": "果园"
+        }, {"SUM_TBMJ": "28017.32", "XZQMC_1": "东西湖区", "PDJB": "3", "DLMC": "旱地"}, {
+            "SUM_TBMJ": "2211.98",
+            "XZQMC_1": "",
+            "PDJB": "4",
+            "DLMC": "水浇地"
+        }, {"SUM_TBMJ": "806976.12683841", "XZQMC_1": "", "PDJB": "", "DLMC": "坑塘水面"}, {
+            "SUM_TBMJ": "4300.48",
+            "XZQMC_1": "新洲区",
+            "PDJB": "5",
+            "DLMC": "旱地"
+        }, {"SUM_TBMJ": "1493349.26", "XZQMC_1": "洪山区", "PDJB": "2", "DLMC": "水田"}, {
+            "SUM_TBMJ": "69540790.82",
+            "XZQMC_1": "东西湖区",
+            "PDJB": "1",
+            "DLMC": "水浇地"
+        }, {"SUM_TBMJ": "273724905.78", "XZQMC_1": "黄陂区", "PDJB": "1", "DLMC": "水田"}, {
+            "SUM_TBMJ": "42390.02",
+            "XZQMC_1": "汉南区",
+            "PDJB": "1",
+            "DLMC": "其他林地"
+        }, {"SUM_TBMJ": "3357.55", "XZQMC_1": "新洲区", "PDJB": "5", "DLMC": "水浇地"}, {
+            "SUM_TBMJ": "9696.68576741",
+            "XZQMC_1": "江夏区",
+            "PDJB": "",
+            "DLMC": "农村道路"
+        }, {"SUM_TBMJ": "172652454.65", "XZQMC_1": "新洲区", "PDJB": "1", "DLMC": "水田"}, {
+            "SUM_TBMJ": "819515.71",
+            "XZQMC_1": "洪山区",
+            "PDJB": "2",
+            "DLMC": "旱地"
+        }, {"SUM_TBMJ": "4.586639128E7", "XZQMC_1": "东西湖区", "PDJB": "1", "DLMC": "水田"}, {
+            "SUM_TBMJ": "42280.14",
+            "XZQMC_1": "青山区",
+            "PDJB": "2",
+            "DLMC": "水田"
+        }, {"SUM_TBMJ": "2632846.12", "XZQMC_1": "黄陂区", "PDJB": "", "DLMC": "果园"}, {
+            "SUM_TBMJ": "102542850.85",
+            "XZQMC_1": "新洲区",
+            "PDJB": "2",
+            "DLMC": "水浇地"
+        }, {"SUM_TBMJ": "360553.56", "XZQMC_1": "黄陂区", "PDJB": "2", "DLMC": "水浇地"}, {
+            "SUM_TBMJ": "7392.944452623",
+            "XZQMC_1": "江夏区",
+            "PDJB": "",
+            "DLMC": "其他草地"
+        }, {
+            "SUM_TBMJ": "181695849.18001277",
+            "XZQMC_1": "蔡甸区",
+            "PDJB": "1",
+            "DLMC": "水浇地"
+        }, {"SUM_TBMJ": "43504780.58054043", "XZQMC_1": "新洲区", "PDJB": "2", "DLMC": "坑塘水面"}, {
+            "SUM_TBMJ": "2563943.07",
+            "XZQMC_1": "洪山区",
+            "PDJB": "1",
+            "DLMC": "旱地"
+        }, {"SUM_TBMJ": "52061.93511103", "XZQMC_1": "汉阳区", "PDJB": "1", "DLMC": "旱地"}, {
+            "SUM_TBMJ": "91525.774396419",
+            "XZQMC_1": "蔡甸区",
+            "PDJB": "3",
+            "DLMC": "旱地"
+        }, {"SUM_TBMJ": "1320035.46511926", "XZQMC_1": "", "PDJB": "1", "DLMC": "旱地"}, {
+            "SUM_TBMJ": "57670243.54",
+            "XZQMC_1": "新洲区",
+            "PDJB": "2",
+            "DLMC": "水田"
+        }, {"SUM_TBMJ": "54256.09", "XZQMC_1": "东西湖区", "PDJB": "2", "DLMC": "水田"}, {
+            "SUM_TBMJ": "75883.83",
+            "XZQMC_1": "青山区",
+            "PDJB": "1",
+            "DLMC": "水田"
+        }, {"SUM_TBMJ": "119161715.438982345", "XZQMC_1": "江夏区", "PDJB": "3", "DLMC": "旱地"}, {
+            "SUM_TBMJ": "60406.76",
+            "XZQMC_1": "青山区",
+            "PDJB": "2",
+            "DLMC": "水浇地"
+        }, {"SUM_TBMJ": "3182.46", "XZQMC_1": "东西湖区", "PDJB": "1", "DLMC": "农村道路"}, {
+            "SUM_TBMJ": "15749806.66",
+            "XZQMC_1": "新洲区",
+            "PDJB": "3",
+            "DLMC": "水浇地"
+        }, {"SUM_TBMJ": "1017643.081669514", "XZQMC_1": "蔡甸区", "PDJB": "", "DLMC": "有林地"}, {
+            "SUM_TBMJ": "97057.63",
+            "XZQMC_1": "黄陂区",
+            "PDJB": "3",
+            "DLMC": "水浇地"
+        }, {"SUM_TBMJ": "5724.41218523", "XZQMC_1": "江夏区", "PDJB": "", "DLMC": "沟渠"}, {
+            "SUM_TBMJ": "34548594.218175719",
+            "XZQMC_1": "蔡甸区",
+            "PDJB": "2",
+            "DLMC": "水浇地"
+        }, {"SUM_TBMJ": "4683692.43", "XZQMC_1": "黄陂区", "PDJB": "", "DLMC": "有林地"}, {
+            "SUM_TBMJ": "98714.58051665",
+            "XZQMC_1": "汉阳区",
+            "PDJB": "1",
+            "DLMC": "水田"
+        }, {"SUM_TBMJ": "1683135.836663204", "XZQMC_1": "", "PDJB": "1", "DLMC": "水浇地"}, {
+            "SUM_TBMJ": "1467333.84",
+            "XZQMC_1": "新洲区",
+            "PDJB": "3",
+            "DLMC": "水田"
+        }, {
+            "SUM_TBMJ": "77707759.465017605",
+            "XZQMC_1": "蔡甸区",
+            "PDJB": "1",
+            "DLMC": "水田"
+        }, {
+            "SUM_TBMJ": "4862244.494491903",
+            "XZQMC_1": "",
+            "PDJB": "1",
+            "DLMC": "水田"
+        }, {"SUM_TBMJ": "63793624.61232408", "XZQMC_1": "江夏区", "PDJB": "2", "DLMC": "旱地"}, {
+            "SUM_TBMJ": "154368.26",
+            "XZQMC_1": "东西湖区",
+            "PDJB": "1",
+            "DLMC": "其他园地"
+        }, {"SUM_TBMJ": "97645565.53", "XZQMC_1": "黄陂区", "PDJB": "3", "DLMC": "旱地"}, {
+            "SUM_TBMJ": "14906.18",
+            "XZQMC_1": "汉南区",
+            "PDJB": "2",
+            "DLMC": "旱地"
+        }, {"SUM_TBMJ": "230917.677606999", "XZQMC_1": "江夏区", "PDJB": "1", "DLMC": "水浇地"}, {
+            "SUM_TBMJ": "18827.58",
+            "XZQMC_1": "东西湖区",
+            "PDJB": "1",
+            "DLMC": "沟渠"
+        }, {"SUM_TBMJ": "8856799.33", "XZQMC_1": "汉南区", "PDJB": "1", "DLMC": "坑塘水面"}, {
+            "SUM_TBMJ": "1779035.437628710",
+            "XZQMC_1": "蔡甸区",
+            "PDJB": "3",
+            "DLMC": "水浇地"
+        }, {"SUM_TBMJ": "15528.67603979", "XZQMC_1": "江夏区", "PDJB": "", "DLMC": "灌木林地"}, {
+            "SUM_TBMJ": "543378.36",
+            "XZQMC_1": "洪山区",
+            "PDJB": "3",
+            "DLMC": "水浇地"
+        }, {"SUM_TBMJ": "47432.13", "XZQMC_1": "新洲区", "PDJB": "4", "DLMC": "水田"}, {
+            "SUM_TBMJ": "1944458.52",
+            "XZQMC_1": "洪山区",
+            "PDJB": "3",
+            "DLMC": "旱地"
+        }, {"SUM_TBMJ": "142997961.94", "XZQMC_1": "黄陂区", "PDJB": "2", "DLMC": "旱地"}, {
+            "SUM_TBMJ": "1772337.02",
+            "XZQMC_1": "新洲区",
+            "PDJB": "1",
+            "DLMC": "旱地"
+        }, {
+            "SUM_TBMJ": "1319847.871449196",
+            "XZQMC_1": "江夏区",
+            "PDJB": "",
+            "DLMC": "有林地"
+        }, {"SUM_TBMJ": "84851098.66436206", "XZQMC_1": "江夏区", "PDJB": "1", "DLMC": "旱地"}, {
+            "SUM_TBMJ": "25794.68",
+            "XZQMC_1": "汉南区",
+            "PDJB": "1",
+            "DLMC": "旱地"
+        }, {"SUM_TBMJ": "22430491.50", "XZQMC_1": "黄陂区", "PDJB": "1", "DLMC": "水浇地"}, {
+            "SUM_TBMJ": "149257969.03",
+            "XZQMC_1": "新洲区",
+            "PDJB": "1",
+            "DLMC": "水浇地"
+        }, {"SUM_TBMJ": "910.88", "XZQMC_1": "新洲区", "PDJB": "2", "DLMC": "沟渠"}, {
+            "SUM_TBMJ": "37570.6445397349",
+            "XZQMC_1": "江夏区",
+            "PDJB": "",
+            "DLMC": "设施农用地"
+        }];
+        debugger
+        console.log(a);
+    });
+    var Ready = {
+        //初始化地图
+        initMap: function (geojsonFeature) {
+            var mymap = L.map('mapid').setView([26.8231, 112.6126], 10);
+            var myLayer = L.geoJSON().addTo(mymap);
+            myLayer.addData(geojsonFeature);
+        },
+        //获取geojson数据
+        loadGeojson: function () {
+            $.getJSON('static/syxzq.json', function (res) {
+                if (res) {
+                    Ready.initMap(res)
+                }
+            });
+        },
+        //勾选框点击事件
+        SelectClick: function () {
+            $(".select").change(function () {
+                alert(this.value)
+            })
+        },
+        //初始化datagrid
+        InitDatagrid: function () {
+            winWidth = $(window).width() >= 1000 ? $(window).width() : 1000;
+            var width = (winWidth * 0.98 - 45) / 12;
+            $('#datagrid').datagrid({
+                pagination: true,
+                rownumbers: true,
+                loadMsg: "数据正在加载中，请稍后......",
+                fit: true,        //自动大小
+                fitColumns: true, //自适应列宽
+                singleSelect: true,  //是否单选
+                idField: 'Project_id',
+                columns: [
+                    [
+                        {field: 'time', title: '统计时间', width: width, align: 'center', rowspan: 5,},
+                        {field: 'xzqname', title: '县市区', width: width, align: 'center', rowspan: 5,},
+                        {title: '行政区合计()', colspan: 10}],
+                    [
+                        {
+                            field: 'sum', title: '总面积', width: width, align: 'center', rowspan: 4,
+                        },
+                        {title: '七大类用地', width: width, align: 'center', colspan: 9, rowspan: 1},
+                    ],
+                    [
+                        {
+                            field: 'gendi', title: '耕地', width: width, align: 'center', rowspan: 3,
+                        },
+                        {title: '六大类用地', align: 'center', colspan: 7, rowspan: 1},
+                        {
+                            field: 'qita', title: '其他土地', width: width, align: 'center', rowspan: 3,
+                        },
+                    ],
+                    [
+                        {
+                            field: 'yuan', title: '园地', width: width, align: 'center', rowspan: 2,
+                        },
+                        {
+                            title: '林,草', width: width, align: 'center', colspan: 3, rowspan: 1
+                        },
+                        {
+                            field: 'jiaot', title: '交通设施', width: width, align: 'center', rowspan: 2,
+                        },
+                        {
+                            field: 'shuili', title: '水利用地', width: width, align: 'center', rowspan: 2,
+                        },
+                        {
+                            field: 'chenzhen', title: '城镇工矿', width: width, align: 'center', rowspan: 2,
+                        },
+                    ],
+                    [
+                        {
+                            field: 'lindi',
+                            title: '林地',
+                            width: 0.95 * width,
+                            align: 'center',
+                            rowspan: 1,
+                            colspan: 2,
+                        },
+                        {
+                            field: 'cao', title: '草地', width: width, align: 'center', rowspan: 1,
+                        }
+                    ]
+                ]
+            });
+        },
+        getFeature: function () {
+            // $.get(cfg, null, function (res) {
+            //
+            // });
+            var temp = [];
+            $this = this;
+            $.ajax({
+                type: 'get',
+                async: false,
+                cache: false,
+                // dataType: "json",
+                url: "http://192.168.1.90:8086/hgis/wfs?request=GetFeature&typeName=ktw:city1&outputFormat=application/json",
+                success: function (res) {
+                    //添加市
+                    for (var i = 0; i < res.features.length; i++) {
+                        $this.children = temp;
+                        res.features[i].properties.level = 2;
+                        temp.push(res.features[i].properties);
+                    }
+                }
+            });
+            //添加区县
+            $.ajax({
+                type: 'get',
+                async: false,
+                cache: false,
+                // dataType: "json",
+                url: "http://192.168.1.90:8086/hgis/wfs?request=GetFeature&typeName=ktw:county1&outputFormat=application/json",
+                success: function (res) {
+                    for (var i = 0; i < res.features.length; i++) {
+                        $this.children = temp;
+                        res.features[i].properties.level = 3;
+                        temp.push(res.features[i].properties);
+                    }
+                },
+            });
+            //添加村镇
+            $.ajax({
+                type: 'get',
+                async: false,
+                cache: false,
+                // dataType: "json",
+                url: "http://192.168.1.90:8086/hgis/wfs?request=GetFeature&typeName=ktw:village1&outputFormat=application/json",
+                success: function (res) {
+                    for (var i = 0; i < res.features.length; i++) {
+                        $this.children = temp;
+                        res.features[i].properties.level = 4;
+                        temp.push(res.features[i].properties);
+                    }
+                },
+            });
+            console.log($this.children);
+        },
+        initZtree: function () {
+            var data = {
+                "url": "http://192.168.1.90:8086/hgis/wfs",
+                "typeName": [
+                    {
+                        "cityLayer": "ktw:city1",
+                        "countyLayer": "ktw:county1",
+                        "villageLayer": "ktw:village1"
+                    }
+                ]
+            };
+            $.ajax({
+                type: 'post',
+                async: false,
+                cache: false,
+                contentType: "application/json",
+                data: JSON.stringify(data),
+                url: "http://192.168.1.86:7081/onemap/TreeXzq/ToVillageLevel",
+                success: function (res) {
+                    if (res.code == "1") {
+                        zNodes = res.rows;
+                        zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+                    }
+                }
+            });
+        },
+    }
+    // })(jQuery);
 </script>
 </html>

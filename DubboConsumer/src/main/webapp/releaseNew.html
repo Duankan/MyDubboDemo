@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>发布公告</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <!------引入css----->
+    <link href="../../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../js/ztree/css/bootstrapStyle.css" rel="stylesheet" />
+    <!----------------引入bootstrap、kindeditor、Jquery库-------------->
+    <script type="text/javascript" src="../../js/jquery-2.2.3.min.js"></script>
+    <script type="text/javascript" src="../../js/bootstrap.min.js"></script>
+    <script charset="utf-8" src="../../js/kindeditor/kindeditor-all.js"></script>
+    <script charset="utf-8" src="../../js/kindeditor/lang/zh-CN.js"></script>
+    <script type="text/javascript" src="../../js/layui/layer/layer.js"></script>
+    <script src="../../js/oa.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/moment.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/ztree/js/jquery.ztree.core.js"></script>
+    <script src="../../js/ztree/js/jquery.ztree.excheck.js"></script>
+    <script src="../../js/ztree/js/jquery.ztree.exedit.js"></script>
+    <style>
+        #blue_button{
+            border: 0px;
+            background-color: #2a8ef0;
+            color: #FFFFFF;
+            border-Radius:0px;
+        }
+        #cancle{border-Radius:0px;}
+
+    </style>
+
+</head>
+<body>
+<div class="container">
+    <div class="col-lg-12 col-sm-12 col-md-12" style="margin-top:10px;">
+        <form class="form-horizontal" role="form" id="addForm">
+            <div class="form-group">
+                <label class="col-lg-2 col-md-2 col-sm-2 control-label"></label>
+                <div class="col-lg-10 col-md-10 col-sm-10" style="text-align:center;">
+                    <h3 id="title">
+                        发布公告
+                    </h3>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 col-md-2 col-sm-2 control-label"><font color="red">*</font>公开形式</label>
+                <div class="col-lg-10 col-md-10 col-sm-10" style="margin-top: 5px;">
+                    <input type="radio" name="openType" id="openType_all" checked  /><label for="openType_all" style="margin-right:10px;">全面公开</label>
+                    <input type="radio" name="openType" id="openType_bf" /><label for="openType_bf" style="margin-right:10px;">部分公开</label>
+                </div>
+            </div>
+            <div id="reciveDiv" class="form-group" style="display: none;">
+                <label class="col-lg-2 col-md-2 col-sm-2 control-label"><font color="red">*</font>接收人</label>
+                <div class="col-lg-10 col-md-10 col-sm-10">
+                    <input id="reciveSel" type="text" class="form-control" readonly value=""  onclick="showMenu(); return false;"/>
+                    <input id="reciveID" type="text" class="form-control" style="display: none;"  />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 col-md-2 col-sm-2 control-label"><font color="red">*</font>公告标题</label>
+                <div class="col-lg-10 col-md-10 col-sm-10">
+                    <input type="text" name="newtitle" id="NewTitle" class="form-control">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 col-md-2 col-sm-2 control-label"><font color="red">*</font>公告详情</label>
+                <div class="col-lg-10 col-md-10 col-sm-10">
+                    <textarea id="kindeditor" name="newcontent" cols="100" rows="8" style="width:100%;height:400px;visibility:hidden;" ></textarea>
+                </div>
+            </div>
+            <div class="form-group" align="right">
+                <div class="row">
+                    <button id="blue_button" type="button" class="btn col-lg-2 col-sm-2 col-md-2 col-lg-offset-5 col-sm-offset-5 col-md-offset-5" style="height:34px">提交</button>
+                    <button id="cancle" type="button" class="btn btn-default col-lg-2 col-sm-2 col-md-2">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+<div id="menuContent" class="menuContent" style="display:none; position: absolute;border:1px solid rgb(198, 198, 224);background: #f3f5f6">
+    <div id="treeUser" class="ztree" style="margin-top:0; width:500px;"></div>
+</div>
+</body>
+</html>
+<script type="text/javascript">
+    var userID,username;
+    var newId;
+    KindEditor.ready(function(K) {
+        editor = K.create('#kindeditor', {
+            cssPath : '../../js/kindeditor/plugins/code/prettify.css',
+            uploadJson : '../../js/kindeditor/jsp/upload_json.jsp',
+            fileManagerJson : '../../js/kindeditor/jsp/file_manager_json.jsp',
+            allowFileManager : true,
+            afterBlur: function(){this.sync();},
+        });
+    });
+    $(function () {
+        $.when(oa.initUser()).done(function(){
+            userID=oa.user.userId;
+            username=oa.user.userName;
+            showOrgTree();
+        });
+    });
+
+    $("#openType_all").click(function(){
+        var s=$("#openType_all").is(":checked");
+        if(s){
+            $("#cancle").click();
+            $("#reciveDiv").css('display',"none");
+        }
+    });
+
+    $("#openType_bf").click(function(){
+        var s=$("#openType_bf").is(":checked");
+        if(s){
+            $("#reciveDiv").css('display',"block");
+            showOrgTree();
+            $("#cancle").click();
+        }
+    });
+
+    var tree_data;
+    function showOrgTree() {
+        if (tree_data == undefined) {
+            tree_data = [{
+                id: "root", pId: "null", name: "组织机构", open: true, nocheck: true,isParent: true, children: []
+            }];
+            oa.initOrgTree().done(deal).done(work);
+            function deal(res, parent) {
+                if (!res) return;
+                if (res.length <= 0) return;
+                if (parent == null) {
+                    parent = tree_data[0];
+                }
+                for (var i = 0; i < res.length; i++) {
+                    var node="";
+                    if(res[i].__type=="org") {
+                        node = {
+                            id: res[i].ORGID,
+                            name: res[i].ORGNAME,
+                            data: res[i],
+                            nocheck: true,
+                        }
+                    }else{
+                        node = {
+                            id: res[i].EMPID,
+                            name: res[i].EMPNAME,
+                            data: res[i],
+                            nocheck: false,
+                        }
+                    }
+                    parent.children = parent.children || [];
+                    parent.children.push(node);
+                    deal(res[i].children, node);
+                }
+            }
+        } else {
+            work();
+        }
+        function work() {
+            var container = $('#treeUser');
+            var setting = {
+                check: {
+                    enable: true,
+                    nocheckInherit: false,
+                    chkboxType :{
+                        "Y" : "",
+                        "N" : ""
+                    }
+                },
+                view: {
+                    dblClickExpand: false
+                },
+                data: {
+                    simpleData: {
+                        enable: true
+                    }
+                },
+                callback: {
+                    beforeClick: beforeClick,
+                    onCheck:onCheck,
+                    //onClick:onClick,
+                }
+            };
+            $.fn.zTree.init(container, setting, tree_data);
+        }
+    }
+
+    function beforeClick(treeId, treeNode) {
+        var check=true;
+        var zTree = $.fn.zTree.getZTreeObj("treeUser");
+        if (treeNode.data == undefined || treeNode.data.ORGID != undefined) {
+            //机构
+            zTree.expandNode(treeNode);
+            layer.msg("只能选择员工,请重新选择...");
+            check=false;
+        }
+        return check;
+    }
+
+    function onCheck(event, treeId, treeNode) {
+        var zTree = $.fn.zTree.getZTreeObj("treeUser");
+        var nodes = zTree.getCheckedNodes(true);
+        var str = "",sid="";
+        nodes.sort(function compare(a,b){return a.id-b.id;});
+        for (var i=0, l=nodes.length; i<l; i++) {
+            str += nodes[i].name + ",";
+            sid += nodes[i].id + ",";
+        }
+        if (str.length > 0 ) str = str.substring(0, str.length-1);
+        var reciveObj = $("#reciveSel");
+        reciveObj.attr("value", str);
+        var reciveID = $("#reciveID");
+        reciveID.attr("value", sid);
+    }
+
+    function onClick(e, treeId, treeNode) {
+        var zTree = $.fn.zTree.getZTreeObj("treeUser"),
+            nodes = zTree.getSelectedNodes(),
+            v = "";
+        nodes.sort(function compare(a,b){return a.id-b.id;});
+        for (var i=0, l=nodes.length; i<l; i++) {
+            v += nodes[i].name + ",";
+        }
+        if (v.length > 0 ) v = v.substring(0, v.length-1);
+        var reciveObj = $("#reciveSel");
+        reciveObj.attr("value", v);
+    }
+
+    function showMenu() {
+        var reciveObj = $("#reciveSel");
+        var reciveOffset = $("#reciveSel").offset();
+        $("#menuContent").css({left:reciveOffset.left + "px", top:reciveOffset.top + reciveObj.outerHeight() + "px"}).slideDown("fast");
+        $("body").bind("mousedown", onBodyDown);
+    }
+    function hideMenu() {
+        $("#menuContent").fadeOut("fast");
+        $("body").unbind("mousedown", onBodyDown);
+    }
+    function onBodyDown(event) {
+        if (!(event.target.id == "menuBtn" || event.target.id == "menuContent" || $(event.target).parents("#menuContent").length>0)) {
+            hideMenu();
+        }
+    }
+
+    $("#blue_button").click(function () {
+        var time=moment().format('YYYY-MM-DD')+" "+new Date().getHours() + ":" + new Date().getMinutes()+ ":" + new Date().getSeconds();
+        //var time=moment().format('YYYY-MM-DD');
+        var paras = {
+            paras : {
+                KTW_NEW : {
+                    tbl : "KTW_NEW",
+                    type : "insert",
+                    cols : [
+                        {
+                            name : "ID0",
+                            format : "increment"
+                        },
+                        {
+                            name : "UPLOADADMIN",
+                            value : username
+                        },
+                        {
+                            name : "UPLOADTIME",
+                            value : time
+                        },
+                        {
+                            name: "STATE",
+                            value: 0
+                        }
+                    ]
+                }
+            }
+        };
+        var title=$("#NewTitle").val();
+        if(title == ""){
+            layer.alert("必须填写公告标题!");
+            return;
+        }
+        paras.paras.KTW_NEW.cols.push({
+            name : "NEWTITLE",
+            value : title
+        });
+        var content =editor.html();
+        if(content == ""){
+            layer.alert("必须填写公告详情!");
+            return;
+        }
+        paras.paras.KTW_NEW.cols.push({
+            name : "NEWCONTENT",
+            value : content
+        });
+        //全面开放
+        var type;
+        if ($("#openType_all:checked").length >0) {
+            paras.paras.KTW_NEW.cols.push({
+                name : "OPENTYPE",
+                value : 0
+            });
+            type=0;
+        }else {
+            paras.paras.KTW_NEW.cols.push({
+                name : "OPENTYPE",
+                value : 1
+            });
+            type=1;
+        }
+        oa.saveData(paras).done(function (res) {
+            if (res.res.KTW_NEW.successRes) {
+                var para2 = {
+                    paras: {
+                        KTW_NEW: {
+                            tbl: "KTW_NEW",
+                            filters: [
+                                {
+                                    keyname : "UPLOADTIME",
+                                    keyval : time,
+                                    op : "eq"
+                                },
+                                {
+                                    keyname : "UPLOADADMIN",
+                                    keyval : username,
+                                    op : "eq"
+                                },
+                                {
+                                    keyname : "NEWTITLE",
+                                    keyval : title,
+                                    op : "eq"
+                                }
+                            ]
+                        }
+                    }
+                };
+                oa.queryData(para2).done(function (res) {
+                    if (res && res.res && res.res.KTW_NEW && res.res.KTW_NEW.successRes){
+                        newId=res.res.KTW_NEW.returnRes[0].ID0;
+                        if(type==1){
+                            setBFOpen();
+                        }
+                        layer.msg("发布成功!");
+                        $("#cancle").click();
+                    } else {
+                        layer.alert("发布失败！");
+                    }
+                });
+
+            } else {
+                layer.alert("发布失败！");
+            }
+        });
+    });
+
+    function setBFOpen() {
+        var ids=$("#reciveID").val();
+        var names=$("#reciveSel").val();
+        var datas = {
+            news: {
+                NEWID: newId,
+                RECIPIENTTYPE: "emp",
+                RECIPIENTID: ids,
+                RECIPIENTNAME:names,
+                CREATETIME: moment().format('YYYY-MM-DD') + " " + new Date().getHours() + ":" + new Date().getMinutes() + ":" + new Date().getSeconds(),
+                CREATOR: userID,
+                CREATORNAME: username
+            }
+        };
+        var url = "com.gis.eos.ktwnew.insertRelationByID.biz.ext";
+        $.ajax({
+            type : "post",
+            url : url,
+            data : JSON.stringify(datas),
+            contentType : "application/json; charset=UTF-8",
+            success : function(result){
+            },
+            error : function(data){
+                console.log(data);
+                layer.alert("发布失败！");
+            }
+        });
+
+    }
+
+    $("#cancle").click(function(){
+        var zTree = $.fn.zTree.getZTreeObj("treeUser");
+        zTree.checkAllNodes(false);
+        var reciveObj = $("#reciveSel");
+        reciveObj.attr("value", "");
+        var reciveID = $("#reciveID");
+        reciveID.attr("value", "");
+        var title=$("#NewTitle").val("");
+        editor.html("");
+    });
+
+
+</script>

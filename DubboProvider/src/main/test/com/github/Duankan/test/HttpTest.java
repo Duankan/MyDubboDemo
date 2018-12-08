@@ -100,12 +100,33 @@ public class HttpTest {
 
     @Test
     public void test4() {
-// http://192.168.1.63:8080/hgis/ows?request=aggregate&service=wps&statistics={"groupFields":"行政区","statisticsFields":[{"operate":"sum","field":"TBMJ"}],"typename":"ktw:dileituban","clip":"0","filter":"DLBM like '01%'"}
-        HttpUtils httpUtils = new HttpUtils();
-//        String res= HttpRequestUtil.sendGet("statistics={\"filter\":\"DLBM like %2701%25%27\",\"groupFields\":\"行政区\",\"statisticsFields\":[{\"operate\":\"sum\",\"field\":\"TBMJ\"}],\"typename\":\"ktw:dileituban\",\"clip\":\"0\"}");
-//        String res=httpUtils.doGet("http://192.168.1.63:8080/hgis/ows?request=aggregate&service=wps&statistics={\"filter\":\"DLBM like %2701%25%27\",\"groupFields\":\"行政区\",\"statisticsFields\":[{\"operate\":\"sum\",\"field\":\"TBMJ\"}],\"typename\":\"ktw:dileituban\",\"clip\":\"0\"}");
-    int a=0;
-//        "http://192.168.1.63:8080/hgis/ows?request=aggregate&service=wps&statistics={\"filter\":\"DLBM like %2701%25%27\",\"groupFields\":\"行政区\",\"statisticsFields\":[{\"operate\":\"sum\",\"field\":\"TBMJ\"}],\"typename\":\"ktw:dileituban\",\"clip\":\"0\"}",
-
+        HttpUtils httpUtils=new HttpUtils();
+        String res=httpUtils.doGet("http://192.168.1.90:8086/hgis/wfs?request=GetFeature&typeName=ktw:city1&outputFormat=application/json&count=10");
+    }
+    @Test
+    public void test5(){
+        String errorJson="{}";
+        String typeName="{\n" +
+                "    \"typeName\":[\n" +
+                "      {\n" +
+                "        \"cityLayer\":\"ktw:city1\",\n" +
+                "        \"countyLayer\":\"ktw:county1\"\n" +
+                "      }\n" +
+                "    ],\n" +
+                "    \"test\":\"1111\"\n" +
+                "  }";
+        try {
+            JSONObject object= (JSONObject) JSONObject.parse(typeName);
+            JSONArray array= (JSONArray) object.get("typeName");
+            String cityLayer=((JSONObject)array.get(0)).getString("cityLayer");
+            String countyLayer=((JSONObject)array.get(0)).getString("countyLayer");
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            System.out.println("图层传递错误！");
+        }
+        finally {
+            System.out.println(1111);
+        }
     }
 }
