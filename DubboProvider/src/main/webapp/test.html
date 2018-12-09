@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+</head>
+<body>
+</body>
+<script>
+    (function ($) {
+        var ktw={};
+        ktw.Init=function () {
+            var config = null;
+            $.ajax({
+                url: "config/app.xml",
+                dataType: 'xml',
+                type: 'GET',
+                cache: false,
+                timeout: 2000,
+                async: false,
+                error: function (xml) {
+                    console.error(arguments);
+                },
+                success: function (xml) {
+                    config = $.xml2json(xml);
+                }
+            });
+        }
+        $(function () {
+            new ktw.Init();
+        });
+    })(jQuery);
+</script>
+</html>

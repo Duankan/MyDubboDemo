@@ -74,6 +74,9 @@
 </body>
 <script>
     (function ($) {
+        ktw.InitDatagrid=function () {
+            alert(1111111111111);
+        }
         $(function () {
             Ready.getJson();
         });

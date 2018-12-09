@@ -7,14 +7,20 @@ import org.springframework.data.redis.core.ValueOperations;
 import java.io.Serializable;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-
 /**
  * Redis工具类
  */
 public class RedisUtil {
     @Autowired
     RedisTemplate<Serializable, Object> redisTemplate;
-
+    /**
+     * 获取缓存的存活时间
+     * @param key
+     * @return
+     */
+    public Long getExpire(String key){
+        return redisTemplate.getExpire(key,TimeUnit.SECONDS);
+    }
     /**
      * 批量删除对应的value
      *
@@ -25,7 +31,6 @@ public class RedisUtil {
             remove(key);
         }
     }
-
     /**
      * 批量删除key
      *
@@ -36,7 +41,6 @@ public class RedisUtil {
         if (keys.size() > 0)
             redisTemplate.delete(keys);
     }
-
     /**
      * 删除对应的value
      *
@@ -47,7 +51,6 @@ public class RedisUtil {
             redisTemplate.delete(key);
         }
     }
-
     /**
      * 判断缓存中是否有对应的value
      *
@@ -57,7 +60,6 @@ public class RedisUtil {
     public boolean exists(final String key) {
         return redisTemplate.hasKey(key);
     }
-
     /**
      * 读取缓存
      *
@@ -66,12 +68,10 @@ public class RedisUtil {
      */
     public Object get(final String key) {
         Object result = null;
-        ValueOperations<Serializable, Object> operations = redisTemplate
-                .opsForValue();
+        ValueOperations<Serializable, Object> operations = redisTemplate.opsForValue();
         result = operations.get(key);
         return result;
     }
-
     /**
      * 写入缓存
      *
@@ -82,8 +82,7 @@ public class RedisUtil {
     public boolean set(final String key, Object value) {
         boolean result = false;
         try {
-            ValueOperations<Serializable, Object> operations = redisTemplate
-                    .opsForValue();
+            ValueOperations<Serializable, Object> operations = redisTemplate.opsForValue();
             operations.set(key, value);
             result = true;
         } catch (Exception e) {
@@ -91,7 +90,6 @@ public class RedisUtil {
         }
         return result;
     }
-
     /**
      * 写入缓存
      *
@@ -102,8 +100,7 @@ public class RedisUtil {
     public boolean set(final String key, Object value, Long expireTime) {
         boolean result = false;
         try {
-            ValueOperations<Serializable, Object> operations = redisTemplate
-                    .opsForValue();
+            ValueOperations<Serializable, Object> operations = redisTemplate.opsForValue();
             operations.set(key, value);
             redisTemplate.expire(key, expireTime, TimeUnit.SECONDS);
             result = true;
@@ -112,7 +109,6 @@ public class RedisUtil {
         }
         return result;
     }
-
     public void setRedisTemplate(
             RedisTemplate<Serializable, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
