@@ -1,26 +1,140 @@
-{
-  "XzqMJ": {
-    "url": "http://192.168.1.93:8080/hgis/ows",
-    "typename": "ktw:DLTB_hebing_chulihou",
-    "groupFields": "行政区",
-    "statisticsFields": [
-      {
-        "operate": "sum",
-        "field": "TBMJ"
-      }
-    ],
-    "clip": "0",
-    "do":"sumAll",
-    "areacode":"420100",
-    "cqlCondition": {"01":"耕地","02":"林地","03":"园地"}
+[
+  {
+    "id": "ZLDJDM",
+    "pId": "0",
+    "name": "质量等级",
+    "levelReal": "1"
   },
-  "ss":{
-    "typeName":[
-      {
-        "cityLayer":"ktw:city1",
-        "countyLayer":"ktw:county1"
-      }
-    ],
-    "test":"1111"
+  {
+    "id": "PDJB",
+    "pId": "0",
+    "name": "坡度级别",
+    "levelReal": "1"
+  },
+  {
+    "id": "JBNTLX",
+    "pId": "0",
+    "name": "基本农田类型",
+    "levelReal": "1"
+  },
+  {
+    "id": "GDLX",
+    "pId": "0",
+    "name": "耕地类型",
+    "levelReal": "1"
+  },
+  {
+    "id": "KCLX",
+    "pId": "0",
+    "name": "扣除类型",
+    "levelReal": "1"
+  },
+  {
+    "id": "ZL1",
+    "pId": "ZLDJDM",
+    "name": "一级",
+    "levelReal": "2"
+  },
+  {
+    "id": "ZL2",
+    "pId": "ZLDJDM",
+    "name": "二级",
+    "levelReal": "2"
+  },
+  {
+    "id": "ZL3",
+    "pId": "ZLDJDM",
+    "name": "三级",
+    "levelReal": "2"
+  },
+  {
+    "id": "ZL4",
+    "pId": "ZLDJDM",
+    "name": "四级",
+    "levelReal": "2"
+  },
+  {
+    "id": "ZL5",
+    "pId": "ZLDJDM",
+    "name": "五级",
+    "levelReal": "2"
+  },
+  {
+    "id": "PD1",
+    "pId": "PDJB",
+    "name": "一级",
+    "levelReal": "2"
+  },
+  {
+    "id": "PD2",
+    "pId": "PDJB",
+    "name": "二级",
+    "levelReal": "2"
+  },
+  {
+    "id": "PD3",
+    "pId": "PDJB",
+    "name": "三级",
+    "levelReal": "2"
+  },
+  {
+    "id": "PD4",
+    "pId": "PDJB",
+    "name": "四级",
+    "levelReal": "2"
+  },
+  {
+    "id": "PD5",
+    "pId": "PDJB",
+    "name": "五级",
+    "levelReal": "2"
+  },
+  {
+    "id": "JB1",
+    "pId": "JBNTLX",
+    "name": "现状耕地",
+    "levelReal": "2"
+  },
+  {
+    "id": "JB2",
+    "pId": "JBNTLX",
+    "name": "现状可调整",
+    "levelReal": "2"
+  },
+  {
+    "id": "JB3",
+    "pId": "JBNTLX",
+    "name": "名优特新农产",
+    "levelReal": "2"
+  },
+  {
+    "id": "GD1",
+    "pId": "GDLX",
+    "name": "耕地",
+    "levelReal": "2"
+  },
+  {
+    "id": "GD2",
+    "pId": "GDLX",
+    "name": "坡地",
+    "levelReal": "2"
+  },
+  {
+    "id": "KC1",
+    "pId": "KCLX",
+    "name": "按田坎",
+    "levelReal": "2"
+  },
+  {
+    "id": "KC2",
+    "pId": "KCLX",
+    "name": "其他非耕地",
+    "levelReal": "2"
+  },
+  {
+    "id": "KC3",
+    "pId": "KCLX",
+    "name": "按耕地系数",
+    "levelReal": "2"
   }
-}
+]

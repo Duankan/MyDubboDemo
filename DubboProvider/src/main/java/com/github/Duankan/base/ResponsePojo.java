@@ -1,6 +1,8 @@
 package com.github.Duankan.base;
 
-public class ResponsePojo<T> {
+import java.io.Serializable;
+
+public class ResponsePojo<T> implements Serializable{
     private String code;//返回状态码
     private String msg;//响应信息
     private T object;//返回的对象

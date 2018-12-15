@@ -3,10 +3,11 @@ package com.github.Duankan.test;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.Duankan.po.TestPo;
 import com.github.Duankan.utils.RedisUtil;
+import com.github.Duankan.utils.SerializerUtil;
 import org.junit.Before;
 import org.junit.Test;
-import org.omg.CORBA.OBJ_ADAPTER;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.dao.DataAccessException;
@@ -16,11 +17,8 @@ import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisCluster;
 
-import java.io.Serializable;
 import java.util.*;
 
 public class RedisTest extends BaseTest {
@@ -65,10 +63,19 @@ public class RedisTest extends BaseTest {
         //设置 redis 字符串数据
         jedis.set("runoobkey", "学习redis");
         System.out.println(jedis.get("runoobkey"));
-//        GitPo gitPo = new GitPo();
-//        gitPo.setName("李青青");
-//        gitPo.setAddr("湖北襄阳");//set支持string和byte
-//        jedis.set("gitpo".getBytes(), serialize(gitPo));
+        List list=new ArrayList<>();
+        TestPo testPo = new TestPo();
+        TestPo testPo2=new TestPo();
+        testPo.setName("李青青");
+        testPo.setAddr("湖北襄阳");//set支持string和byte
+        testPo2.setName("dankin");
+        testPo2.setAddr("湖北荆州");//set支持string和byte
+        list.add(testPo);list.add(testPo2);
+//        res=SerializerUtil.unSerializer_protostuff(jedis.get("protostuff".getBytes()),ResponsePojo.class);
+//        System.out.println(res.getObject());
+//        jedis.set("list".getBytes(), SerializerUtil.serializer_jdk(list));
+//        List list2= (List<TestPo>) SerializerUtil.unSerializer_jdk(jedis.get("list".getBytes()));
+//        System.out.println(list2.size());
     }
 
     /**
@@ -151,6 +158,43 @@ public class RedisTest extends BaseTest {
         redisTemplate.setHashKeySerializer(jackson2JsonRedisSerializer);
         redisTemplate.setHashValueSerializer(jackson2JsonRedisSerializer);
         redisTemplate.afterPropertiesSet();
+    }
+    @Test
+    public void serializerTest(){
+        //连接本地的 Redis 服务
+        Jedis jedis = new Jedis("localhost");
+        TestPo po=new TestPo();
+        TestPo po2=new TestPo();
+        po.setId(1);
+        po.setAddr("荆州");
+        po.setName("dankin");
+        po2.setId(1);
+        po2.setAddr("襄阳");
+        po2.setName("doris");
+        List<TestPo> ls=new ArrayList<>();
+        Map<String,TestPo> map=new HashMap<>();
+        Set<TestPo> set=new HashSet<>();
+        map.put("p1",po);
+        map.put("p2",po2);
+        ls.add(po);ls.add(po2);
+        set.add(po);set.add(po2);
+        String a=SerializerUtil.serializationObject_kryo(po);
+        jedis.set("kryo",a);
+        jedis.get("kryo");
+        po=SerializerUtil.deserializationObject(jedis.get("kryo"),TestPo.class);
+        System.out.println(po.getName());
+        String ls_a=SerializerUtil.serializationList(ls,TestPo.class);
+        jedis.set("kryo_ls",ls_a);
+        jedis.get("kryo_ls");
+        ls=SerializerUtil.deserializationList(jedis.get("kryo_ls"),TestPo.class);
+        System.out.println(ls.size());
+//        System.out.println(ls.size());
+//        String mp_a=SerializerUtil.serializationMap(map,TestPo.class);
+//        map=SerializerUtil.deserializationMap(mp_a,TestPo.class);
+//        System.out.println(map.size());
+//        String s_a=SerializerUtil.serializationSet(set,TestPo.class);
+//        set=SerializerUtil.deserializationSet(s_a,TestPo.class);
+//        System.out.println(set.size());
     }
 
 
