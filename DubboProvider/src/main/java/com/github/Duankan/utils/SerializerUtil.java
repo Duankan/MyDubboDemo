@@ -74,7 +74,7 @@ public class SerializerUtil {
     public static <T extends Serializable> String serializationObject_kryo(T obj) {
         Kryo kryo = new Kryo();
         kryo.setReferences(false);
-        kryo.register(obj.getClass(), new JavaSerializer());
+        kryo.register(obj.getClass(), new JavaSerializer());//注册序列化类型
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         Output output = new Output(baos);
         kryo.writeClassAndObject(output, obj);
@@ -103,7 +103,7 @@ public class SerializerUtil {
         Kryo kryo = new Kryo();
         kryo.setReferences(false);
         kryo.setRegistrationRequired(true);
-        CollectionSerializer serializer = new CollectionSerializer();
+        CollectionSerializer serializer = new CollectionSerializer();//注册序列化类型
         serializer.setElementClass(clazz, new JavaSerializer());
         serializer.setElementsCanBeNull(false);
         kryo.register(clazz, new JavaSerializer());
