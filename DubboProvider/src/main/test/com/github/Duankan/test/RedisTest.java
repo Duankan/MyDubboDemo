@@ -30,7 +30,8 @@ public class RedisTest extends BaseTest {
     RedisTemplate clusterRedisTemplate;
     @Autowired
     JedisConnectionFactory connectionFactory;
-    public RedisTemplate<String,Object> redisTemplate=null;
+    public RedisTemplate<String, Object> redisTemplate = null;
+
     @Test
     public void test() {
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("classpath:spring-redis.xml");
@@ -63,14 +64,15 @@ public class RedisTest extends BaseTest {
         //设置 redis 字符串数据
         jedis.set("runoobkey", "学习redis");
         System.out.println(jedis.get("runoobkey"));
-        List list=new ArrayList<>();
+        List list = new ArrayList<>();
         TestPo testPo = new TestPo();
-        TestPo testPo2=new TestPo();
+        TestPo testPo2 = new TestPo();
         testPo.setName("李青青");
         testPo.setAddr("湖北襄阳");//set支持string和byte
         testPo2.setName("dankin");
         testPo2.setAddr("湖北荆州");//set支持string和byte
-        list.add(testPo);list.add(testPo2);
+        list.add(testPo);
+        list.add(testPo2);
 //        res=SerializerUtil.unSerializer_protostuff(jedis.get("protostuff".getBytes()),ResponsePojo.class);
 //        System.out.println(res.getObject());
 //        jedis.set("list".getBytes(), SerializerUtil.serializer_jdk(list));
@@ -100,8 +102,9 @@ public class RedisTest extends BaseTest {
 
 
     }
+
     @Test
-    public void test5(){
+    public void test5() {
         //一次set多个key与一次获取多个key的String结构到缓存
 //        Map<String,String> maps = new HashMap<String, String>();
 //        maps.put("multi1","multi1");
@@ -128,8 +131,8 @@ public class RedisTest extends BaseTest {
 //        redisTemplate.opsForHash().putAll("peo",hp);
 //        System.out.println(redisTemplate.opsForHash().entries("peo"));
         //存放set结构数据
-        String[] strings=new String[]{"aaa","bbb","aaa"};
-        redisTemplate.opsForSet().add("set",strings);
+        String[] strings = new String[]{"aaa", "bbb", "aaa"};
+        redisTemplate.opsForSet().add("set", strings);
         System.out.println(redisTemplate.opsForSet().members("set"));
     }
 
@@ -142,16 +145,16 @@ public class RedisTest extends BaseTest {
      * 5.set结构：
      */
     @Before
-    public void initRedisTemplate(){
+    public void initRedisTemplate() {
         //jdk序列化？
         Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<Object>(Object.class);
         //sting序列化
-        StringRedisSerializer stringRedisSerializer=new StringRedisSerializer();
+        StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
         ObjectMapper om = new ObjectMapper();
         om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
         om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
         jackson2JsonRedisSerializer.setObjectMapper(om);
-        redisTemplate=new RedisTemplate();
+        redisTemplate = new RedisTemplate();
         redisTemplate.setConnectionFactory(connectionFactory);
         redisTemplate.setKeySerializer(stringRedisSerializer);
         redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);
@@ -159,42 +162,48 @@ public class RedisTest extends BaseTest {
         redisTemplate.setHashValueSerializer(jackson2JsonRedisSerializer);
         redisTemplate.afterPropertiesSet();
     }
+
     @Test
-    public void serializerTest(){
+    public void serializerTest() {
         //连接本地的 Redis 服务
         Jedis jedis = new Jedis("localhost");
-        TestPo po=new TestPo();
-        TestPo po2=new TestPo();
+        TestPo po = new TestPo();
+        TestPo po2 = new TestPo();
         po.setId(1);
         po.setAddr("荆州");
         po.setName("dankin");
         po2.setId(1);
         po2.setAddr("襄阳");
         po2.setName("doris");
-        List<TestPo> ls=new ArrayList<>();
-        Map<String,TestPo> map=new HashMap<>();
-        Set<TestPo> set=new HashSet<>();
-        map.put("p1",po);
-        map.put("p2",po2);
-        ls.add(po);ls.add(po2);
-        set.add(po);set.add(po2);
-        String a=SerializerUtil.serializationObject_kryo(po);
-        jedis.set("kryo",a);
+        List<TestPo> ls = new ArrayList<>();
+        Map<String, TestPo> map = new HashMap<>();
+        Set<TestPo> set = new HashSet<>();
+        map.put("p1", po);
+        map.put("p2", po2);
+        ls.add(po);
+        ls.add(po2);
+        set.add(po);
+        set.add(po2);
+
+        String a = SerializerUtil.serializationObject_kryo(po);
+        jedis.set("kryo", a);
         jedis.get("kryo");
-        po=SerializerUtil.deserializationObject(jedis.get("kryo"),TestPo.class);
+        po = SerializerUtil.deserializationObject(jedis.get("kryo"), TestPo.class);
         System.out.println(po.getName());
-        String ls_a=SerializerUtil.serializationList(ls,TestPo.class);
-        jedis.set("kryo_ls",ls_a);
+
+        String ls_a = SerializerUtil.serializationList(ls, TestPo.class);
+        jedis.set("kryo_ls", ls_a);
         jedis.get("kryo_ls");
-        ls=SerializerUtil.deserializationList(jedis.get("kryo_ls"),TestPo.class);
+        ls = SerializerUtil.deserializationList(jedis.get("kryo_ls"), TestPo.class);
         System.out.println(ls.size());
-//        System.out.println(ls.size());
-//        String mp_a=SerializerUtil.serializationMap(map,TestPo.class);
-//        map=SerializerUtil.deserializationMap(mp_a,TestPo.class);
-//        System.out.println(map.size());
-//        String s_a=SerializerUtil.serializationSet(set,TestPo.class);
-//        set=SerializerUtil.deserializationSet(s_a,TestPo.class);
-//        System.out.println(set.size());
+
+        String mp_a = SerializerUtil.serializationMap(map, TestPo.class);
+        map = SerializerUtil.deserializationMap(mp_a, TestPo.class);
+        System.out.println(map.size());
+
+        String s_a = SerializerUtil.serializationSet(set, TestPo.class);
+        set = SerializerUtil.deserializationSet(s_a, TestPo.class);
+        System.out.println(set.size());
     }
 
 
