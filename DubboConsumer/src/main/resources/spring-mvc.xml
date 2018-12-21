@@ -25,7 +25,6 @@
         <!-- 可为空,方便实现自已的依据扩展名来选择视图解释类的逻辑 -->
         <property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
     </bean>
-
     <!-- 返回json 需导入 jackson-annotations.jar，jackson-core.jar，jackson-databind.jar -->
     <!-- 通过处理器映射DefaultAnnotationHandlerMapping来开启支持@Controller注解 -->
     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" />
@@ -54,7 +53,7 @@
             </list>
         </property>
     </bean>
-    <!--&lt;!&ndash; 开启Shiro注解 &ndash;&gt;-->
+    <!-- 开启Shiro注解 -->
     <!--<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>-->
     <!--<aop:config proxy-target-class="true"></aop:config>-->
     <!--<bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">-->
