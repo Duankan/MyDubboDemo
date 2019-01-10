@@ -1,16 +1,10 @@
 package com.github.Duankan.test;
 
-import com.github.Duankan.train.Factory;
 import com.github.Duankan.train.Single;
 import com.github.Duankan.train.factory.abstractFactory.AbstractFactory;
 import com.github.Duankan.train.factory.abstractFactory.DefaultFactory;
-import com.github.Duankan.train.factory.factoryMethod.Moveable;
-import com.github.Duankan.train.factory.factoryMethod.PlaneFactory;
-import com.github.Duankan.train.factory.factoryMethod.TankFactory;
-import com.github.Duankan.train.factory.factoryMethod.VeicleFactory;
 import com.github.Duankan.train.factory.po.Plane;
 import com.github.Duankan.train.factory.po.Tank;
-import com.github.Duankan.train.factory.sample.SampleFactory;
 import org.junit.Test;
 
 /**
@@ -26,7 +20,7 @@ public class TrainTest {
     //2.测试工厂模式
     @Test
     public void factoryTest() {
-        //测试简单工厂
+        //测试简单工厂:扩展性差，还得修改工厂类和增加产品类
 //        Plane plane= (Plane) SampleFactory.getIntance("com.github.Duankan.train.factory.po.Plane");
 //        plane.run();
 //        Tank tank= (Tank) SampleFactory.getIntance("com.github.Duankan.train.factory.po.Tank");

@@ -56,7 +56,6 @@ public class Dubbo_consumer {
     @RequestMapping("/shiro")
     public String testRole(){
         try{
-
         }
         catch (UnauthorizedException e){
             throw e;

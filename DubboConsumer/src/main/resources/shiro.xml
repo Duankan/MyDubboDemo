@@ -1,14 +1,14 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
-    <!-- shiroFilter Bean的id 必须和web.xml中配置的filter的name一直  -->
+    <!-- shiroFilter Bean的id 必须和web.xml中配置的filter的name一致  -->
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <property name="securityManager" ref="securityManager" />
         <!--loginUrl 没有登录的用户请求需要登录的页面时自动跳转到登录页面，不是必须的属性，不输入地址的话会自动寻找项目web项目的根目录下的”/login.jsp”页面。 -->
         <property name="loginUrl" value="/login.jsp" />
-        <!--&lt;!&ndash;successUrl 登录成功默认跳转页面，不配置则跳转至”/”。如果登陆前点击的一个需要登录的页面，则在登录自动跳转到那个需要登录的页面。不跳转到此。&ndash;&gt;-->
-        <!--<property name="successUrl" value="/success.jsp" />-->
-        <!--&lt;!&ndash;unauthorizedUrl：没有权限默认跳转的页面。&ndash;&gt;-->
+        <!--successUrl 登录成功默认跳转页面，不配置则跳转至”/”。如果登陆前点击的一个需要登录的页面，则在登录自动跳转到那个需要登录的页面。不跳转到此。-->
+        <property name="successUrl" value="/success.jsp" />
+        <!--unauthorizedUrl：没有权限默认跳转的页面-->
         <!--<property name="unauthorizedUrl" value="/index.jsp" />-->
         <!-- 这个就是权限路径过滤  会在下面单独列出来 -->
         <property name="filterChainDefinitions">
