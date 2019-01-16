@@ -23,7 +23,7 @@ import java.util.*;
  */
 public class SerializerUtil {
     //jdk序列化 object需要implements Serializable
-    public static byte[] serializer_jdk(Object object) {
+    public  byte[] serializer_jdk(Object object) {
         ObjectOutputStream oos = null;
         ByteArrayOutputStream baos = null;
         try {
@@ -38,7 +38,7 @@ public class SerializerUtil {
         return null;
     }
     //jdk反序列化
-    public static Object unSerializer_jdk(byte[] bytes) {
+    public  Object unSerializer_jdk(byte[] bytes) {
         ObjectInputStream ois = null;
         ByteArrayInputStream bais = null;
         try {

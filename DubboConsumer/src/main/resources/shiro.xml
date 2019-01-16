@@ -28,10 +28,10 @@
     <!-- 配置securityManager -->
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
         <!-- 单realm应用。如果有多个realm，使用‘realms’属性代替 -->
-        <property name="realm" ref="testRealm" />
-        <property name="cacheManager" ref="cacheManager" />  <!-- 缓存配置，集群环境慎用 -->
+        <property name="realm" ref="testRealm"/>
+        <property name="cacheManager" ref="cacheManager"/>  <!-- 缓存配置，集群环境慎用 -->
     </bean>
-    <bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager" />
+    <bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager"/>
     <!-- 一个简单的jdbcRealm -->
     <bean id="testRealm" class="com.github.Duan.Consumer.shiro.TestRealm">
     </bean>
