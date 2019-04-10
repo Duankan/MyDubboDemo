@@ -2,6 +2,7 @@ package com.github.Duankan.test;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.github.Duankan.utils.HttpRequestUtil;
 import com.github.Duankan.utils.HttpUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -101,7 +102,7 @@ public class HttpTest {
     @Test
     public void test4() {
         HttpUtils httpUtils=new HttpUtils();
-        String res=httpUtils.doGet("http://192.168.1.90:8086/hgis/wfs?request=GetFeature&typeName=ktw:city1&outputFormat=application/json&count=10");
+        String res=httpUtils.doGet("http://localhost:63342/MyDubboDemo/DubboConsumer/src/main/webapp/Leaflet.html?_ijt=42r9pv5hd49kr56lm3v577m0df");
     }
     @Test
     public void test5(){
@@ -128,5 +129,21 @@ public class HttpTest {
         finally {
             System.out.println(1111);
         }
+    }
+    @Test
+    public void test6(){
+        String url="http://192.168.1.93:8080/hgis/ows?service=WMS&request=GetMap&version=1.1.1&layers=ktw:city&styles=&format=image/png&transparent=true&id=tipicLayercity&pane=[object%20HTMLDivElement]&srs=EPSG:4326&width=850&height=600&bbox=104.073486328125,27.388916015625,119.893798828125,35.70556640625";
+        HttpRequestUtil.sendGetImage(url,null);
+        int a=0;
+    }
+    @Test
+    public void testLatLn(){
+//        112.489013671875 30.904541015625
+//        0.023421946363 //经度
+//        0.018018018018 //纬度
+        double a=0.2/85.39;//经度
+        double b=0.2/111.00;//纬度
+        System.out.println(a);
+        System.out.println(b);
     }
 }

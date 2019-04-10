@@ -24,322 +24,70 @@
         /*box-sizing: border-box;*/
         /*overflow: hidden;*/
         /*}*/
-
         body {
             width: 100%;
             height: 100vh;
+            margin: 0;
         }
+
         .head {
-            /*background: aqua;*/
             width: 100%;
             height: 10%;
         }
+
         .content {
-            /*background: #f22613;*/
             width: 100%;
-            height: 40%;
-        }
-
-        /*.bottom {*/
-        /*background: gray;*/
-        /*width: 20%;*/
-        /*height: 50%;*/
-        /*}*/
-
-        .select {
-            width: 80px;
-            height: 30px;
-            border: aqua solid 2px;
-        }
-        .datagrid {
-            width: 100%;
-            height: 35%;
+            height: 80%;
         }
     </style>
 </head>
-<body>
+<body onload="init();">
 <div class="head"></div>
-<div class="content" id="mapid"></div>
-<!--<div class="datagrid"></div>-->
-<div>
-    <ul class="list">
-        <li class="title"> 城市：<input id="citySel" type="text" readonly value="" style="width:120px;"/>
-            <a id="menuBtn" href="#" onclick="showMenu();return false">选择</a></li>
-    </ul>
-</div>
-<div id="bottom" class="bottom" style="display:none; position: absolute;">
-    <ul id="treeDemo" class="ztree" style="margin-top:0; width:160px;"></ul>
-</div>
+<div class="content" id="map"></div>
 </body>
 <script>
-    var zTreeObj;
-    // zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
-    var setting = {
-        data: {
-            simpleData: {
-                enable: true
-            }
-        },
-        callback: {
-            onClick: clickFun,
-        },
-    };
-    var winWidth;
-    // zTree 的数据属性，深入使用请参考 API 文档（zTreeNode 节点数据详解）
-    var zNodes = [];
-
-    function showMenu() {
-        var map = document.getElementById('mapid');
-        var citySelObject = $("#citySel");
-        var cityOffset = citySelObject.offset();
-        var height = map.offsetHeight == 0 ? 100 : map.offsetHeight;
-        $(".bottom").css({
-            height: map.offsetHeight,
-            left: cityOffset.left + "px",
-            top: cityOffset.top + citySelObject.outerHeight() + "px",
-            background: 'skyblue'
-        }).slideDown("fast");
-        $("body").bind("mousedown", onBodyDown);
-    }
-
-    function clickFun(ev, treeId, node) {
-        var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
-            nodes = zTree.getSelectedNodes(),
-            v = "";
-        nodes.sort(function compare(a, b) {
-            return a.id - b.id;
+    // $(document).ready(function () {
+    //     init();
+    //     // Ready.loadGeojson();
+    // });
+    // var Ready = {
+    //     //初始化地图
+    //     initMap: function (geojsonFeature) {
+    //         var mymap = L.map('mapid').setView([26.8231, 112.6126], 10);
+    //         var myLayer = L.geoJSON().addTo(mymap);
+    //         myLayer.addData(geojsonFeature);
+    //     },
+    //     //获取geojson数据
+    //     loadGeojson: function () {
+    //         $.getJSON('static/syxzq.json', function (res) {
+    //             if (res) {
+    //                 Ready.initMap(res)
+    //             }
+    //         });
+    //     },
+    // }
+    function init() {
+        var map = L.map('map', {
+            center: {lon: 114, lat: 30.71},
+            crs: L.CRS.EPSG4326,
+            zoom: 8,
+            minZoom: 0,
+            maxZoom: 16
         });
-        for (var i = 0, l = nodes.length; i < l; i++) {
-            v += nodes[i].name + ",";
-        }
-        if (v.length > 0) v = v.substring(0, v.length - 1);
-        var cityObj = $("#citySel");
-        cityObj.attr("value", v);
+        L.tileLayer.wms("http://192.168.1.98:8086/hgis/ows", {
+            layers: 'ktw:DLTB2017',
+            format: 'image/png',
+            transparent: true
+        }).addTo(map);
+        var latlngs =
+            [[30.20716935396194, 114.1169348359108],
+                [30.206689238548282, 114.11772340536118],
+                [30.206190347671512, 114.1170608997345],
+                [30.20684480667115, 114.11674171686172],
+                [30.20716935396194, 114.1169348359108]
+            ];
+        var polygon = L.polygon(latlngs, {color: 'red'}).addTo(map);
+        map.fitBounds(polygon.getBounds());
     }
-
-    function onBodyDown(event) {
-        if (!(event.target.id == "menuBtn" || event.target.id == "bottom" || $(event.target).parents("#bottom").length > 0)) {
-            hideMenu();
-            initZtree();
-        }
-    }
-
-    function hideMenu() {
-        $(".bottom").fadeOut("fast");
-        $("body").unbind("mousedown", onBodyDown);
-    }
-
-    function initZtree() {
-        var data = {
-            "url": "http://192.168.1.90:8086/hgis/wfs",
-            "typeName": [
-                {
-                    "cityLayer": "ktw:city1",
-                    "countyLayer": "ktw:county1",
-                    "villageLayer": "ktw:village1"
-                }
-            ]
-        };
-        $.ajax({
-            type: 'post',
-            async: false,
-            cache: false,
-            contentType: "application/json",
-            data: JSON.stringify(data),
-            url: "http://192.168.1.86:7081/onemap/TreeXzq/ToVillageLevel",
-            success: function (res) {
-                if (res.code == "1") {
-                    zNodes = res.rows;
-                    zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
-                }
-            }
-        });
-    }
-
-    window.onresize = function (ev) {
-        var map = document.getElementById('mapid');
-        var citySelObject = $("#citySel");
-        var cityOffset = citySelObject.offset();
-        var mapObject = $("#mapid");
-        var mapOffset = mapObject.offset();
-        $(".bottom").css({
-            height: map.offsetHeight,
-            left: cityOffset.left + "px",
-            top: cityOffset.top + citySelObject.outerHeight() + "px",
-            background: 'skyblue'
-        }).slideDown("fast");
-    }
-    $(document).ready(function () {
-        initZtree();
-        Ready.loadGeojson();
-        console.log(a);
-    });
-    var Ready = {
-        //初始化地图
-        initMap: function (geojsonFeature) {
-            var mymap = L.map('mapid').setView([26.8231, 112.6126], 10);
-            var myLayer = L.geoJSON().addTo(mymap);
-            myLayer.addData(geojsonFeature);
-        },
-        //获取geojson数据
-        loadGeojson: function () {
-            $.getJSON('static/syxzq.json', function (res) {
-                if (res) {
-                    Ready.initMap(res)
-                }
-            });
-        },
-        //勾选框点击事件
-        SelectClick: function () {
-            $(".select").change(function () {
-                alert(this.value)
-            })
-        },
-        //初始化datagrid
-        InitDatagrid: function () {
-            winWidth = $(window).width() >= 1000 ? $(window).width() : 1000;
-            var width = (winWidth * 0.98 - 45) / 12;
-            $('#datagrid').datagrid({
-                pagination: true,
-                rownumbers: true,
-                loadMsg: "数据正在加载中，请稍后......",
-                fit: true,        //自动大小
-                fitColumns: true, //自适应列宽
-                singleSelect: true,  //是否单选
-                idField: 'Project_id',
-                columns: [
-                    [
-                        {field: 'time', title: '统计时间', width: width, align: 'center', rowspan: 5,},
-                        {field: 'xzqname', title: '县市区', width: width, align: 'center', rowspan: 5,},
-                        {title: '行政区合计()', colspan: 10}],
-                    [
-                        {
-                            field: 'sum', title: '总面积', width: width, align: 'center', rowspan: 4,
-                        },
-                        {title: '七大类用地', width: width, align: 'center', colspan: 9, rowspan: 1},
-                    ],
-                    [
-                        {
-                            field: 'gendi', title: '耕地', width: width, align: 'center', rowspan: 3,
-                        },
-                        {title: '六大类用地', align: 'center', colspan: 7, rowspan: 1},
-                        {
-                            field: 'qita', title: '其他土地', width: width, align: 'center', rowspan: 3,
-                        },
-                    ],
-                    [
-                        {
-                            field: 'yuan', title: '园地', width: width, align: 'center', rowspan: 2,
-                        },
-                        {
-                            title: '林,草', width: width, align: 'center', colspan: 3, rowspan: 1
-                        },
-                        {
-                            field: 'jiaot', title: '交通设施', width: width, align: 'center', rowspan: 2,
-                        },
-                        {
-                            field: 'shuili', title: '水利用地', width: width, align: 'center', rowspan: 2,
-                        },
-                        {
-                            field: 'chenzhen', title: '城镇工矿', width: width, align: 'center', rowspan: 2,
-                        },
-                    ],
-                    [
-                        {
-                            field: 'lindi',
-                            title: '林地',
-                            width: 0.95 * width,
-                            align: 'center',
-                            rowspan: 1,
-                            colspan: 2,
-                        },
-                        {
-                            field: 'cao', title: '草地', width: width, align: 'center', rowspan: 1,
-                        }
-                    ]
-                ]
-            });
-        },
-        getFeature: function () {
-            // $.get(cfg, null, function (res) {
-            //
-            // });
-            var temp = [];
-            $this = this;
-            $.ajax({
-                type: 'get',
-                async: false,
-                cache: false,
-                // dataType: "json",
-                url: "http://192.168.1.90:8086/hgis/wfs?request=GetFeature&typeName=ktw:city1&outputFormat=application/json",
-                success: function (res) {
-                    //添加市
-                    for (var i = 0; i < res.features.length; i++) {
-                        $this.children = temp;
-                        res.features[i].properties.level = 2;
-                        temp.push(res.features[i].properties);
-                    }
-                }
-            });
-            //添加区县
-            $.ajax({
-                type: 'get',
-                async: false,
-                cache: false,
-                // dataType: "json",
-                url: "http://192.168.1.90:8086/hgis/wfs?request=GetFeature&typeName=ktw:county1&outputFormat=application/json",
-                success: function (res) {
-                    for (var i = 0; i < res.features.length; i++) {
-                        $this.children = temp;
-                        res.features[i].properties.level = 3;
-                        temp.push(res.features[i].properties);
-                    }
-                },
-            });
-            //添加村镇
-            $.ajax({
-                type: 'get',
-                async: false,
-                cache: false,
-                // dataType: "json",
-                url: "http://192.168.1.90:8086/hgis/wfs?request=GetFeature&typeName=ktw:village1&outputFormat=application/json",
-                success: function (res) {
-                    for (var i = 0; i < res.features.length; i++) {
-                        $this.children = temp;
-                        res.features[i].properties.level = 4;
-                        temp.push(res.features[i].properties);
-                    }
-                },
-            });
-            console.log($this.children);
-        },
-        initZtree: function () {
-            var data = {
-                "url": "http://192.168.1.90:8086/hgis/wfs",
-                "typeName": [
-                    {
-                        "cityLayer": "ktw:city1",
-                        "countyLayer": "ktw:county1",
-                        "villageLayer": "ktw:village1"
-                    }
-                ]
-            };
-            $.ajax({
-                type: 'post',
-                async: false,
-                cache: false,
-                contentType: "application/json",
-                data: JSON.stringify(data),
-                url: "http://192.168.1.86:7081/onemap/TreeXzq/ToVillageLevel",
-                success: function (res) {
-                    if (res.code == "1") {
-                        zNodes = res.rows;
-                        zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
-                    }
-                }
-            });
-        },
-    }
-    // })(jQuery);
 </script>
 </html>

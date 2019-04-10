@@ -113,5 +113,8 @@ public class Dubbo_consumer {
 //        response.setStatus(500);
         return responsePojo;
     }
-    //post服务
+    @RequestMapping("/leaflet")
+    public String tohtml(){
+        return "Leaflet";
+    }
 }

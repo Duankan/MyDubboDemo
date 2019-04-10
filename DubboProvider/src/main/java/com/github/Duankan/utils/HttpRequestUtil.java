@@ -37,16 +37,16 @@ public class HttpRequestUtil {
         return sendGet(url, "");
     }
 
-    public static URLConnection getURLConnection(URL realUrl,String contentType) throws IOException {
+    public static URLConnection getURLConnection(URL realUrl, String contentType) throws IOException {
         URLConnection conn = realUrl.openConnection();
         // 设置通用的请求属性
         conn.setRequestProperty("accept", "*/*");
         conn.setRequestProperty("connection", "Keep-Alive");
         conn.setRequestProperty("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
-        if(contentType.isEmpty())        
-        	conn.setRequestProperty("Content-type", "application/json;charset=UTF-8");
-        else 
-        	conn.setRequestProperty("Content-type", contentType + ";charset=UTF-8");
+        if (contentType.isEmpty())
+            conn.setRequestProperty("Content-type", "application/json;charset=UTF-8");
+        else
+            conn.setRequestProperty("Content-type", contentType + ";charset=UTF-8");
         conn.setRequestProperty("User-Operation-Info", "a3UjjlaLC9He");
         conn.setRequestProperty("Authorization", "Basic YWRtaW46Z2Vvc2VydmVy");
         return conn;
@@ -68,7 +68,7 @@ public class HttpRequestUtil {
                 url += "?" + param;
             URL realUrl = new URL(url);
             // 打开和URL之间的连接
-            URLConnection conn = getURLConnection(realUrl,"");
+            URLConnection conn = getURLConnection(realUrl, "");
             // 建立实际的连接
             conn.connect();
             // 获取所有响应头字段
@@ -110,7 +110,7 @@ public class HttpRequestUtil {
         try {
             URL realUrl = new URL(url);
             // 打开和URL之间的连接
-            URLConnection conn = getURLConnection(realUrl,"");
+            URLConnection conn = getURLConnection(realUrl, "");
             // 发送POST请求必须设置如下两行
             conn.setDoOutput(true);
             conn.setDoInput(true);
@@ -144,23 +144,22 @@ public class HttpRequestUtil {
         }
         return result;
     }
-    
+
     /**
-     * 
+     * @param url
+     * @param param
+     * @return
      * @author： luxiaolin
-     *  @param url
-     *  @param param
-     *  @return
      * @description：带编码格式的Post请求
      */
-    public static String sendPost(String url, Object param,String contentType) {
+    public static String sendPost(String url, Object param, String contentType) {
         PrintWriter out = null;
         BufferedReader in = null;
         String result = "";
         try {
             URL realUrl = new URL(url);
             // 打开和URL之间的连接
-            URLConnection conn = getURLConnection(realUrl,contentType);
+            URLConnection conn = getURLConnection(realUrl, contentType);
             // 发送POST请求必须设置如下两行
             conn.setDoOutput(true);
             conn.setDoInput(true);
@@ -234,7 +233,7 @@ public class HttpRequestUtil {
         try {
             URL realUrl = new URL(url);
             // 打开和URL之间的连接
-            URLConnection conn = getURLConnection(realUrl,"");
+            URLConnection conn = getURLConnection(realUrl, "");
             // 发送POST请求必须设置如下两行
             conn.setDoOutput(true);
             conn.setDoInput(true);
@@ -265,6 +264,44 @@ public class HttpRequestUtil {
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
+        }
+        return result;
+    }
+
+    public static String sendGetImage(String url, String param) {
+        String result = "";
+        InputStream in;
+        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+        try {
+            if (!StringUtil.isBlank(param))
+                url += "?" + param;
+            URL realUrl = new URL(url);
+            // 打开和URL之间的连接
+            URLConnection conn = getURLConnection(realUrl, "");
+            // 建立实际的连接
+            conn.connect();
+            // 获取所有响应头字段
+            Map<String, List<String>> map = conn.getHeaderFields();
+            // 定义 BufferedReader输入流来读取URL的响应
+            in = conn.getInputStream();
+
+            //创建一个Buffer字符串
+            byte[] buffer = new byte[1024];
+            //每次读取的字符串长度，如果为-1，代表全部读取完毕
+            int len = 0;
+            //使用一个输入流从buffer里把数据读取出来
+            while ((len = in.read(buffer)) != -1) {
+            //用输出流往buffer里写入数据，中间参数代表从哪个位置开始读，len代表读取的长度
+                outStream.write(buffer, 0, len);
+            }
+            File desc = new File("G:\\dankin0814\\1.png");
+            FileOutputStream out = new FileOutputStream(desc);
+            out.write(outStream.toByteArray());
+            out.close();
+        } catch (Exception e) {
+            System.out.println("发送GET请求出现异常！" + e);
+            e.printStackTrace();
+        } finally {
         }
         return result;
     }
