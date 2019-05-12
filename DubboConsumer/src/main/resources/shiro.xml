@@ -15,13 +15,13 @@
             <value>
                 <!--/static/**=anon  &lt;!&ndash;静态资源允许访问&ndash;&gt;-->
                 <!--/login.jsp=anon-->
-                /= anon
-                /dubboConsumer/login=anon    <!--登录不需要认证-->
-                /dubboConsumer/HttpGet=anon
-                <!--/logout = logout-->
-                <!--/role/** = roles[admin]-->
-                <!--/permission/** = perms[permssion:look]-->
-                /dubboConsumer/** = authc
+                <!--/= anon-->
+                <!--/dubboConsumer/login=anon    &lt;!&ndash;登录不需要认证&ndash;&gt;-->
+                <!--/dubboConsumer/HttpGet=anon-->
+                <!--&lt;!&ndash;/logout = logout&ndash;&gt;-->
+                <!--&lt;!&ndash;/role/** = roles[admin]&ndash;&gt;-->
+                <!--&lt;!&ndash;/permission/** = perms[permssion:look]&ndash;&gt;-->
+                <!--/dubboConsumer/** = authc-->
             </value>
         </property>
     </bean>

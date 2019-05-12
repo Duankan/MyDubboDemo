@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
        xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:task="http://www.springframework.org/schema/task"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
-		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
 
     <!-- 自动扫描指定目录，将控制器加载到bean -->
-    <context:component-scan base-package="com.github.Duankan.*"></context:component-scan>
+    <context:component-scan base-package="com.github.Duan.Consumer.*"></context:component-scan>
+    <!--异步调用-->
+    <task:executor id="eventExecutor" pool-size="2"/>
+    <task:annotation-driven executor="eventExecutor"/>
     <import resource="dubbo-demo-consumer.xml"></import>
     <import resource="shiro.xml"></import>
 </beans>

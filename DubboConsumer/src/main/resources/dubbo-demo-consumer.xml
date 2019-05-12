@@ -18,7 +18,9 @@
     <dubbo:reference group="test" id="Mydemo" interface="com.github.Duankan.service.IDubboService" timeout="1200000"/>
     <dubbo:reference group="shiro" id="IUsers" interface="com.github.Duankan.service.IUsers" timeout="1200000"/>
     <dubbo:reference group="shiro" id="IRole" interface="com.github.Duankan.service.IRole" timeout="1200000"/>
-    <dubbo:reference group="shiro" id="IPermission" interface="com.github.Duankan.service.IPermission" timeout="1200000"/>
+    <dubbo:reference group="shiro" id="IPermission" interface="com.github.Duankan.service.IPermission"
+                     timeout="1200000"/>
+    <dubbo:reference group="shiro" id="tskdemo" interface="com.github.Duankan.service.ITask" timeout="1200000"/>
     <!-- ###直连提供者###
     在开发及测试环境下，经常需要绕过注册中心，只测试指定服务提供者，这时候可能需要点对点直连，
     点对点直联方式，将以服务接口为单位，忽略注册中心的提供者列表。-->
