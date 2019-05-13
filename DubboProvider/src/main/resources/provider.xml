@@ -23,5 +23,8 @@
     <!--shiro的permissionService-->
     <bean id="IPermission" class="com.github.Duankan.service.impl.PermissionServiceImpl"></bean>
     <dubbo:service interface="com.github.Duankan.service.IPermission" ref="IPermission" group="shiro"></dubbo:service>
+    <!--task的Itaskservice-->
+    <bean id="tskdemo" class="com.github.Duankan.service.impl.TaskServiceImpl"></bean>
+    <dubbo:service interface="com.github.Duankan.service.ITask" ref="tskdemo" group="shiro"></dubbo:service>
     <!--#####服务分组：当一个接口有多种实现时，可以用group区分#####-->
 </beans>

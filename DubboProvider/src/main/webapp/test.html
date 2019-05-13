@@ -9,8 +9,8 @@
 </body>
 <script>
     (function ($) {
-        var ktw={};
-        ktw.Init=function () {
+        var ktw = {};
+        ktw.Init = function () {
             var config = null;
             $.ajax({
                 url: "config/app.xml",
@@ -26,9 +26,26 @@
                     config = $.xml2json(xml);
                 }
             });
-        }
+        };
+        ktw.SetPost = function () {
+            $.ajax({
+                url: "http://localhost:8085/dubboConsumer/HttpGet",
+                dataType: 'json',
+                type: 'GET',
+                cache: false,
+                timeout: 2000,
+                async: true,
+                error: function (res) {
+                    console.error(arguments);
+                },
+                success: function (res) {
+                    console.log(res);
+                }
+            });
+        };
         $(function () {
-            new ktw.Init();
+            // new ktw.Init();
+            setInterval(ktw.SetPost(), 1000);
         });
     })(jQuery);
 </script>
