@@ -3,12 +3,15 @@ package com.github.Duankan.test;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.Duankan.utils.HttpUtils;
+import com.github.Duankan.utils.ZipUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.junit.Test;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -100,13 +103,14 @@ public class HttpTest {
 
     @Test
     public void test4() {
-        HttpUtils httpUtils=new HttpUtils();
-        String res=httpUtils.doGet("http://192.168.1.90:8086/hgis/wfs?request=GetFeature&typeName=ktw:city1&outputFormat=application/json&count=10");
+        HttpUtils httpUtils = new HttpUtils();
+        String res = httpUtils.doGet("http://192.168.1.90:8086/hgis/wfs?request=GetFeature&typeName=ktw:city1&outputFormat=application/json&count=10");
     }
+
     @Test
-    public void test5(){
-        String errorJson="{}";
-        String typeName="{\n" +
+    public void test5() {
+        String errorJson = "{}";
+        String typeName = "{\n" +
                 "    \"typeName\":[\n" +
                 "      {\n" +
                 "        \"cityLayer\":\"ktw:city1\",\n" +
@@ -116,17 +120,26 @@ public class HttpTest {
                 "    \"test\":\"1111\"\n" +
                 "  }";
         try {
-            JSONObject object= (JSONObject) JSONObject.parse(typeName);
-            JSONArray array= (JSONArray) object.get("typeName");
-            String cityLayer=((JSONObject)array.get(0)).getString("cityLayer");
-            String countyLayer=((JSONObject)array.get(0)).getString("countyLayer");
-        }
-        catch (Exception e){
+            JSONObject object = (JSONObject) JSONObject.parse(typeName);
+            JSONArray array = (JSONArray) object.get("typeName");
+            String cityLayer = ((JSONObject) array.get(0)).getString("cityLayer");
+            String countyLayer = ((JSONObject) array.get(0)).getString("countyLayer");
+        } catch (Exception e) {
             e.printStackTrace();
             System.out.println("图层传递错误！");
-        }
-        finally {
+        } finally {
             System.out.println(1111);
+        }
+    }
+
+    @Test
+    public void ZipTest() {
+        /** 测试压缩方法1 */
+        try {
+            FileOutputStream fos1 = new FileOutputStream(new File("C:\\Users\\ljiu\\Desktop\\mytest01.zip"));
+            ZipUtil.toZip("C:\\Users\\ljiu\\Desktop\\qq2.png", fos1, true);
+        } catch (Exception e) {
+
         }
     }
 }
