@@ -4,12 +4,15 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.Duankan.utils.HttpRequestUtil;
 import com.github.Duankan.utils.HttpUtils;
+import com.github.Duankan.utils.ZipUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.junit.Test;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -101,13 +104,14 @@ public class HttpTest {
 
     @Test
     public void test4() {
-        HttpUtils httpUtils=new HttpUtils();
-        String res=httpUtils.doGet("http://localhost:63342/MyDubboDemo/DubboConsumer/src/main/webapp/Leaflet.html?_ijt=42r9pv5hd49kr56lm3v577m0df");
+        HttpUtils httpUtils = new HttpUtils();
+        String res = httpUtils.doGet("http://192.168.1.90:8086/hgis/wfs?request=GetFeature&typeName=ktw:city1&outputFormat=application/json&count=10");
     }
+
     @Test
-    public void test5(){
-        String errorJson="{}";
-        String typeName="{\n" +
+    public void test5() {
+        String errorJson = "{}";
+        String typeName = "{\n" +
                 "    \"typeName\":[\n" +
                 "      {\n" +
                 "        \"cityLayer\":\"ktw:city1\",\n" +
@@ -117,33 +121,26 @@ public class HttpTest {
                 "    \"test\":\"1111\"\n" +
                 "  }";
         try {
-            JSONObject object= (JSONObject) JSONObject.parse(typeName);
-            JSONArray array= (JSONArray) object.get("typeName");
-            String cityLayer=((JSONObject)array.get(0)).getString("cityLayer");
-            String countyLayer=((JSONObject)array.get(0)).getString("countyLayer");
-        }
-        catch (Exception e){
+            JSONObject object = (JSONObject) JSONObject.parse(typeName);
+            JSONArray array = (JSONArray) object.get("typeName");
+            String cityLayer = ((JSONObject) array.get(0)).getString("cityLayer");
+            String countyLayer = ((JSONObject) array.get(0)).getString("countyLayer");
+        } catch (Exception e) {
             e.printStackTrace();
             System.out.println("图层传递错误！");
-        }
-        finally {
+        } finally {
             System.out.println(1111);
         }
     }
+
     @Test
-    public void test6(){
-        String url="http://192.168.1.93:8080/hgis/ows?service=WMS&request=GetMap&version=1.1.1&layers=ktw:city&styles=&format=image/png&transparent=true&id=tipicLayercity&pane=[object%20HTMLDivElement]&srs=EPSG:4326&width=850&height=600&bbox=104.073486328125,27.388916015625,119.893798828125,35.70556640625";
-        HttpRequestUtil.sendGetImage(url,null);
-        int a=0;
-    }
-    @Test
-    public void testLatLn(){
-//        112.489013671875 30.904541015625
-//        0.023421946363 //经度
-//        0.018018018018 //纬度
-        double a=0.2/85.39;//经度
-        double b=0.2/111.00;//纬度
-        System.out.println(a);
-        System.out.println(b);
+    public void ZipTest() {
+        /** 测试压缩方法1 */
+        try {
+            FileOutputStream fos1 = new FileOutputStream(new File("C:\\Users\\ljiu\\Desktop\\mytest01.zip"));
+            ZipUtil.toZip("C:\\Users\\ljiu\\Desktop\\qq2.png", fos1, true);
+        } catch (Exception e) {
+
+        }
     }
 }

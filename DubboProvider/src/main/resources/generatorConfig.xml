@@ -38,6 +38,6 @@
             <property name="enableSubPackages" value="false" />
         </javaClientGenerator>
         <!--对应的表名-->
-        <table tableName="git"  domainObjectName="GitPo" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" ></table>
+        <table tableName="taskls"  domainObjectName="Task" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" ></table>
     </context>
 </generatorConfiguration>
