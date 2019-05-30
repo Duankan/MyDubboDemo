@@ -1,11 +1,9 @@
 package com.github.Duan.Consumer.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import com.github.Duan.Consumer.async.AsyncTask;
 import com.github.Duan.Consumer.biz.DownExcelBiz;
 import com.github.Duankan.base.ResponseEnum;
 import com.github.Duankan.base.ResponsePojo;
-import com.github.Duankan.po.Task;
 import com.github.Duankan.po.UserPo;
 import com.github.Duankan.service.*;
 import org.apache.shiro.SecurityUtils;
@@ -24,7 +22,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
 
 @Controller
 @RequestMapping("/dubboConsumer")
@@ -42,8 +39,8 @@ public class Dubbo_consumer {
     AsyncTask asyncTask;
     @Autowired
     DownExcelBiz downExcelBiz;
-    @Autowired
-    ITask iTask;
+//    @Autowired
+//    ITask iTask;
 
     @RequestMapping("/consumer")
     public String test() {
@@ -166,30 +163,31 @@ public class Dubbo_consumer {
         responsePojo.setObject(String.valueOf(endtime));
         return responsePojo;
     }
+
     @RequestMapping("/leaflet")
-    public String tohtml(){
+    public String tohtml() {
         return "Leaflet";
     }
 
     @RequestMapping("/startDownAsync")
     @ResponseBody
     public ResponsePojo<String> download(@RequestBody String param) {
-        JSONObject object = (JSONObject) JSONObject.parse(param);
-        downExcelBiz.startTask(object.getString("taskId"));
-        //插入一条task到数据库
-        Task task = new Task();
-        task.setBegintime(new Date());
-        task.setEndtime(null);
-        task.setProgress("0%");
-        task.setTaskcount("0");
-        task.setTaskid(object.getString("taskId"));
-        task.setTaskname(object.getString("taskName"));
-        iTask.insertTask(task);
+//        JSONObject object = (JSONObject) JSONObject.parse(param);
+//        downExcelBiz.startTask(object.getString("taskId"));
+//        //插入一条task到数据库
+//        Task task = new Task();
+//        task.setBegintime(new Date());
+//        task.setEndtime(null);
+//        task.setProgress("0%");
+//        task.setTaskcount("0");
+//        task.setTaskid(object.getString("taskId"));
+//        task.setTaskname(object.getString("taskName"));
+//        iTask.insertTask(task);
 
         ResponsePojo<String> responsePojo = new ResponsePojo<>();
         responsePojo.setCode(ResponseEnum.SUCCESS.getCode());
         responsePojo.setMsg(ResponseEnum.SUCCESS.getDisplayName());
-        responsePojo.setObject(object.getString("taskId"));
+//        responsePojo.setObject(object.getString("taskId"));
         return responsePojo;
     }
 

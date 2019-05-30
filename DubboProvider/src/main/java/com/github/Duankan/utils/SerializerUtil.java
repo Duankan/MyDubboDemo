@@ -11,19 +11,25 @@ import io.protostuff.ProtobufIOUtil;
 import io.protostuff.ProtostuffIOUtil;
 import io.protostuff.runtime.RuntimeSchema;
 import org.apache.commons.codec.binary.Base64;
+
 import java.io.*;
 import java.util.*;
 
 /**
- * redis的序列化与反序列化工具：
- * 我主要写三种:
- * 1.jdk序列化与反序列化
+ * @author dankin
+ * @date 2018
+ * @func redis序列化工具
+ * @desc 1.jdk序列化与反序列化
  * 2.protostuff序列化与反序列化
  * 3.kryo序列化与反序列化(线程不安全)
  */
 public class SerializerUtil {
-    //jdk序列化 object需要implements Serializable
-    public  byte[] serializer_jdk(Object object) {
+    /**
+     * @param object
+     * @return byte
+     * @desc jdk序列化object需要implements Serializable
+     */
+    public byte[] serializer_jdk(Object object) {
         ObjectOutputStream oos = null;
         ByteArrayOutputStream baos = null;
         try {
@@ -37,8 +43,13 @@ public class SerializerUtil {
         }
         return null;
     }
-    //jdk反序列化
-    public  Object unSerializer_jdk(byte[] bytes) {
+
+    /**
+     * @param bytes
+     * @return Object
+     * @desc jdk反序列化
+     */
+    public Object unSerializer_jdk(byte[] bytes) {
         ObjectInputStream ois = null;
         ByteArrayInputStream bais = null;
         try {
@@ -50,13 +61,26 @@ public class SerializerUtil {
         }
         return null;
     }
-    //protostuff序列化
+
+    /**
+     * @param o
+     * @param <T>
+     * @return byte
+     * @desc protostuff序列化
+     */
     public static <T> byte[] serializer_protostuff(T o) {
         RuntimeSchema<T> schema = RuntimeSchema.createFrom((Class<T>) o.getClass());
 //        Schema schema = RuntimeSchema.getSchema(o.getClass());
         return ProtobufIOUtil.toByteArray(o, schema, LinkedBuffer.allocate(256));
     }
-    //protostuff反序列化
+
+    /**
+     * @param bytes
+     * @param clazz
+     * @param <T>
+     * @return T
+     * @desc protostuff反序列化
+     */
     public static <T> T unSerializer_protostuff(byte[] bytes, Class<T> clazz) {
         T obj = null;
         try {
@@ -70,7 +94,13 @@ public class SerializerUtil {
         }
         return obj;
     }
-    //kryo序列化object
+
+    /**
+     * @param obj
+     * @param <T>
+     * @return String
+     * @desc kryo序列化object
+     */
     public static <T extends Serializable> String serializationObject_kryo(T obj) {
         Kryo kryo = new Kryo();
         kryo.setReferences(false);
@@ -89,7 +119,14 @@ public class SerializerUtil {
         }
         return new String(new Base64().encode(b));
     }
-    //kryo反序列化object
+
+    /**
+     * @param obj
+     * @param clazz
+     * @param <T>
+     * @return T
+     * @desc kryo反序列化object
+     */
     public static <T extends Serializable> T deserializationObject(String obj, Class<T> clazz) {
         Kryo kryo = new Kryo();
         kryo.setReferences(false);
@@ -98,7 +135,14 @@ public class SerializerUtil {
         Input input = new Input(bais);
         return (T) kryo.readClassAndObject(input);
     }
-    //kryo序列化list
+
+    /**
+     * @param obj
+     * @param clazz
+     * @param <T>
+     * @return String
+     * @desc kryo序列化list
+     */
     public static <T extends Serializable> String serializationList(List<T> obj, Class<T> clazz) {
         Kryo kryo = new Kryo();
         kryo.setReferences(false);
@@ -122,7 +166,14 @@ public class SerializerUtil {
         }
         return new String(new Base64().encode(b));
     }
-    //kryo反序列化list
+
+    /**
+     * @param obj
+     * @param clazz
+     * @param <T>
+     * @return List
+     * @desc kryo反序列化list
+     */
     public static <T extends Serializable> List<T> deserializationList(String obj, Class<T> clazz) {
         Kryo kryo = new Kryo();
         kryo.setReferences(false);
@@ -136,7 +187,14 @@ public class SerializerUtil {
         Input input = new Input(bais);
         return (List<T>) kryo.readObject(input, ArrayList.class, serializer);
     }
-    //kryo序列化Map
+
+    /**
+     * @param obj
+     * @param clazz
+     * @param <T>
+     * @return String
+     * @desc kryo序列化Map
+     */
     public static <T extends Serializable> String serializationMap(Map<String, T> obj, Class<T> clazz) {
         Kryo kryo = new Kryo();
         kryo.setReferences(false);
@@ -162,7 +220,14 @@ public class SerializerUtil {
         }
         return new String(new Base64().encode(b));
     }
-    //kryo反序列化Map
+
+    /**
+     * @param obj
+     * @param clazz
+     * @param <T>
+     * @return Map
+     * @desc kryo反序列化Map
+     */
     public static <T extends Serializable> Map<String, T> deserializationMap(String obj, Class<T> clazz) {
         Kryo kryo = new Kryo();
         kryo.setReferences(false);
@@ -180,7 +245,14 @@ public class SerializerUtil {
         return (Map<String, T>) kryo.readObject(input, HashMap.class,
                 serializer);
     }
-    //kryo序列化Set
+
+    /**
+     * @param obj
+     * @param clazz
+     * @param <T>
+     * @return String
+     * @desc kryo序列化Set
+     */
     public static <T extends Serializable> String serializationSet(Set<T> obj, Class<T> clazz) {
         Kryo kryo = new Kryo();
         kryo.setReferences(false);
@@ -204,7 +276,14 @@ public class SerializerUtil {
         }
         return new String(new Base64().encode(b));
     }
-    //kryo反序列化Set
+
+    /**
+     * @param obj
+     * @param clazz
+     * @param <T>
+     * @return Set
+     * @desc kryo反序列化Set
+     */
     public static <T extends Serializable> Set<T> deserializationSet(String obj, Class<T> clazz) {
         Kryo kryo = new Kryo();
         kryo.setReferences(false);

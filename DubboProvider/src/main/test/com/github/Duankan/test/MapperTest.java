@@ -1,10 +1,8 @@
 package com.github.Duankan.test;
 
 import com.github.Duankan.dao.PermissionPoMapper;
-import com.github.Duankan.dao.TaskMapper;
 import com.github.Duankan.dao.UserPoMapper;
 import com.github.Duankan.po.PermissionPo;
-import com.github.Duankan.po.Task;
 import com.github.Duankan.po.UserPo;
 import org.junit.Test;
 
@@ -17,8 +15,8 @@ public class MapperTest extends BaseTest {
     UserPoMapper userPoMapper;
     @Resource
     PermissionPoMapper permissionPoMapper;
-    @Resource
-    TaskMapper taskMapper;
+//    @Resource
+//    TaskMapper taskMapper;
 
     @Test
     public void test() {
@@ -32,7 +30,7 @@ public class MapperTest extends BaseTest {
 
     @Test
     public void test2() {
-        Task task = taskMapper.selectByPrimaryKey("11");
+//        Task task = taskMapper.selectByPrimaryKey("11");
 //        task.setTaskid("111");
 //        task.setTaskname("测试");
 //        taskMapper.insert(task);

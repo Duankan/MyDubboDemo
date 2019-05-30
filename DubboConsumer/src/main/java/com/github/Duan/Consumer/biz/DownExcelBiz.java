@@ -1,6 +1,5 @@
 package com.github.Duan.Consumer.biz;
 
-import com.github.Duankan.po.Task;
 import com.github.Duankan.service.ITask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,9 +29,9 @@ public class DownExcelBiz {
             Thread.sleep(1000 * 8);
             logger.info("DownExcelBiz-->异步下载完毕!");
             //修改任务的进度信息
-            Task task = iTask.getTaskByTaskId(taskId);
-            task.setProgress("100%");
-            iTask.updataTask(task);
+//            Task task = iTask.getTaskByTaskId(taskId);
+//            task.setProgress("100%");
+//            iTask.updataTask(task);
         } catch (Exception e) {
             e.printStackTrace();
         }
