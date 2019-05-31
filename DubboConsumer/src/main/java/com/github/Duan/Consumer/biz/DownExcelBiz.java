@@ -1,9 +1,7 @@
 package com.github.Duan.Consumer.biz;
 
-import com.github.Duankan.service.ITask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +13,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class DownExcelBiz {
     private Logger logger = LoggerFactory.getLogger(DownExcelBiz.class);
-    @Autowired
-    ITask iTask;
+//    @Autowired
+//    ITask iTask;
 
     /**
      * @func 开始下载
