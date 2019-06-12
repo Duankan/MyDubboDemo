@@ -24,12 +24,14 @@ import java.util.*;
  * 3.kryo序列化与反序列化(线程不安全)
  */
 public class SerializerUtil {
+    public static final byte[] EMPTY_ARRAY = new byte[0];
+
     /**
-     * @param object
-     * @return byte
+     * @param object 自定义对象
+     * @return byte 字节码对象
      * @desc jdk序列化object需要implements Serializable
      */
-    public byte[] serializer_jdk(Object object) {
+    public static byte[] serializer_jdk(Object object) {
         ObjectOutputStream oos = null;
         ByteArrayOutputStream baos = null;
         try {
@@ -45,11 +47,11 @@ public class SerializerUtil {
     }
 
     /**
-     * @param bytes
-     * @return Object
+     * @param bytes 字节码对象
+     * @return Object 自定义对象
      * @desc jdk反序列化
      */
-    public Object unSerializer_jdk(byte[] bytes) {
+    public static Object unSerializer_jdk(byte[] bytes) {
         ObjectInputStream ois = null;
         ByteArrayInputStream bais = null;
         try {
@@ -63,9 +65,9 @@ public class SerializerUtil {
     }
 
     /**
-     * @param o
-     * @param <T>
-     * @return byte
+     * @param o   自定义对象
+     * @param <T> 泛型
+     * @return byte 字节码对象
      * @desc protostuff序列化
      */
     public static <T> byte[] serializer_protostuff(T o) {
@@ -96,8 +98,7 @@ public class SerializerUtil {
     }
 
     /**
-     * @param obj
-     * @param <T>
+     * @param <T> obj 要序列化的对象
      * @return String
      * @desc kryo序列化object
      */
@@ -121,10 +122,9 @@ public class SerializerUtil {
     }
 
     /**
-     * @param obj
-     * @param clazz
-     * @param <T>
-     * @return T
+     * @param obj redis中取出的string
+     * @param <T> clazz要序列化输出的对象类型
+     * @return T 序列化输出的对象类型
      * @desc kryo反序列化object
      */
     public static <T extends Serializable> T deserializationObject(String obj, Class<T> clazz) {
@@ -137,9 +137,8 @@ public class SerializerUtil {
     }
 
     /**
-     * @param obj
-     * @param clazz
-     * @param <T>
+     * @param obj   要序列化的list
+     * @param clazz List中元素的类型
      * @return String
      * @desc kryo序列化list
      */
@@ -147,11 +146,13 @@ public class SerializerUtil {
         Kryo kryo = new Kryo();
         kryo.setReferences(false);
         kryo.setRegistrationRequired(true);
+
         CollectionSerializer serializer = new CollectionSerializer();//注册序列化类型
         serializer.setElementClass(clazz, new JavaSerializer());
         serializer.setElementsCanBeNull(false);
-        kryo.register(clazz, new JavaSerializer());
+//        kryo.register(clazz, new JavaSerializer());
         kryo.register(ArrayList.class, serializer);
+
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         Output output = new Output(baos);
         kryo.writeObject(output, obj);
@@ -168,9 +169,8 @@ public class SerializerUtil {
     }
 
     /**
-     * @param obj
-     * @param clazz
-     * @param <T>
+     * @param obj   redis中取得的string
+     * @param clazz 序列化输出的对象类型
      * @return List
      * @desc kryo反序列化list
      */
@@ -178,10 +178,12 @@ public class SerializerUtil {
         Kryo kryo = new Kryo();
         kryo.setReferences(false);
         kryo.setRegistrationRequired(true);
+
         CollectionSerializer serializer = new CollectionSerializer();
         serializer.setElementClass(clazz, new JavaSerializer());
         serializer.setElementsCanBeNull(false);
-        kryo.register(clazz, new JavaSerializer());
+
+//        kryo.register(clazz, new JavaSerializer());
         kryo.register(ArrayList.class, serializer);
         ByteArrayInputStream bais = new ByteArrayInputStream(new Base64().decode(obj));
         Input input = new Input(bais);
@@ -199,13 +201,15 @@ public class SerializerUtil {
         Kryo kryo = new Kryo();
         kryo.setReferences(false);
         kryo.setRegistrationRequired(true);
+
         MapSerializer serializer = new MapSerializer();
         serializer.setKeyClass(String.class, new JavaSerializer());
         serializer.setKeysCanBeNull(false);
         serializer.setValueClass(clazz, new JavaSerializer());
         serializer.setValuesCanBeNull(true);
-        kryo.register(clazz, new JavaSerializer());
+//        kryo.register(clazz, new JavaSerializer());
         kryo.register(HashMap.class, serializer);
+
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         Output output = new Output(baos);
         kryo.writeObject(output, obj);
@@ -232,13 +236,15 @@ public class SerializerUtil {
         Kryo kryo = new Kryo();
         kryo.setReferences(false);
         kryo.setRegistrationRequired(true);
+
         MapSerializer serializer = new MapSerializer();
         serializer.setKeyClass(String.class, new JavaSerializer());
         serializer.setKeysCanBeNull(false);
         serializer.setValueClass(clazz, new JavaSerializer());
         serializer.setValuesCanBeNull(true);
-        kryo.register(clazz, new JavaSerializer());
+//        kryo.register(clazz, new JavaSerializer());
         kryo.register(HashMap.class, serializer);
+
         ByteArrayInputStream bais = new ByteArrayInputStream(
                 new Base64().decode(obj));
         Input input = new Input(bais);
@@ -257,11 +263,13 @@ public class SerializerUtil {
         Kryo kryo = new Kryo();
         kryo.setReferences(false);
         kryo.setRegistrationRequired(true);
+
         CollectionSerializer serializer = new CollectionSerializer();
         serializer.setElementClass(clazz, new JavaSerializer());
         serializer.setElementsCanBeNull(false);
-        kryo.register(clazz, new JavaSerializer());
+//        kryo.register(clazz, new JavaSerializer());
         kryo.register(HashSet.class, serializer);
+
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         Output output = new Output(baos);
         kryo.writeObject(output, obj);
@@ -288,11 +296,13 @@ public class SerializerUtil {
         Kryo kryo = new Kryo();
         kryo.setReferences(false);
         kryo.setRegistrationRequired(true);
+
         CollectionSerializer serializer = new CollectionSerializer();
         serializer.setElementClass(clazz, new JavaSerializer());
         serializer.setElementsCanBeNull(false);
-        kryo.register(clazz, new JavaSerializer());
+//        kryo.register(clazz, new JavaSerializer());
         kryo.register(HashSet.class, serializer);
+
         ByteArrayInputStream bais = new ByteArrayInputStream(
                 new Base64().decode(obj));
         Input input = new Input(bais);

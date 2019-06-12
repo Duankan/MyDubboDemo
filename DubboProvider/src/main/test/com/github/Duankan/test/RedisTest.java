@@ -48,9 +48,16 @@ public class RedisTest extends BaseTest {
 
     @Test
     public void test2() {
-        System.out.println(redisUtil);
-        System.out.println(redisUtil.get("liqingqing"));
-        System.out.println(redisUtil.get("com.github.Duankan.service.impl.DubboServiceImpl_queryById_9"));
+        TestPo testPo = new TestPo();
+        testPo.setName("李青青");
+        testPo.setAddr("湖北襄阳");//set支持string和byte
+        redisUtil.set("tpo", testPo);
+        System.out.println(redisUtil.get("tpo").toString());
+//        System.out.println(redisUtil);
+//        redisUtil.set("dk", "dk");
+//        System.out.println(redisUtil.get("dk"));
+//        System.out.println(redisUtil.get("liqingqing"));
+//        System.out.println(redisUtil.get("com.github.Duankan.service.impl.DubboServiceImpl_queryById_9"));
     }
 
     /**
@@ -167,6 +174,7 @@ public class RedisTest extends BaseTest {
     public void serializerTest() {
         //连接本地的 Redis 服务
         Jedis jedis = new Jedis("localhost");
+
         TestPo po = new TestPo();
         TestPo po2 = new TestPo();
         po.setId(1);
