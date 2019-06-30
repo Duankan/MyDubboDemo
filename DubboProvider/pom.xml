@@ -212,6 +212,16 @@
             <artifactId>kryo-shaded</artifactId>
             <version>4.0.2</version>
         </dependency>
+        <!--rabbitmq-->
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.rabbitmq</groupId>
+            <artifactId>amqp-client</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
